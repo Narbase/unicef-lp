@@ -1,0 +1,73 @@
+package sd.gov.moe.lp.data.tables
+
+import org.jetbrains.exposed.dao.id.UUIDTable
+import sd.gov.moe.lp.data.columntypes.enum
+import sd.gov.moe.lp.data.columntypes.jsonColumn
+import sd.gov.moe.lp.dto.common.enums.LessonType
+
+object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
+    val name = text("name")
+    val thumbnailUrl = text("thumbnail_url").nullable()
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object GradeAdminsTable : UUIDTable("grade_admins"), LoggedTable, DeletableTable {
+    val gradeId = reference("grade_id", GradesTable)
+    val clientId = reference("client_id",ClientsTable)
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
+    val gradeId = reference("grade_id", GradesTable)
+    val name = text("name")
+    val description = text("description").nullable()
+    val thumbnailUrl = text("thumbnail_url").nullable()
+    val hasCertificate = bool("has_certificate")
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object SubjectAdminsTable : UUIDTable("subject_admins"), LoggedTable, DeletableTable {
+    val subjectId = reference("subject_id", SubjectsTable)
+    val clientId = reference("client_id",ClientsTable)
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+
+object LessonsTable : UUIDTable("lessons"), LoggedTable, DeletableTable {
+    val subjectId = reference("subject_id", SubjectsTable)
+    val title = text("name")
+    val type = enum("type", LessonType::class)
+    val order = integer("order")
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object StandardLessonsTable : UUIDTable("standard_lessons"), LoggedTable, DeletableTable {
+    val lessonId = reference("lesson_id", LessonsTable)
+    val filePath = text("file_path")
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object NonGradedAssessmentsTable : UUIDTable("non_graded_assessments"), LoggedTable, DeletableTable {
+    val lessonId = reference("lesson_id", LessonsTable)
+    val form = jsonColumn<String>("form").nullable()
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object GradedAssessmentsTable : UUIDTable("graded_assessments"), LoggedTable, DeletableTable {
+    val lessonId = reference("lesson_id", LessonsTable)
+    val form = jsonColumn<String>("form").nullable()
+    val areQuestionsShuffled = bool("are_questions_shuffled")
+    val maximumAllowedAttempts = integer("maximum_allowed_attempts")
+    val areAnswersShown = bool("are_answers_shown")
+    val areOptionsShuffled = bool("are_options_shuffled")
+    val passingPercentage = double("passing_percentage")
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}

@@ -55,14 +55,14 @@ object StandardLessonsTable : UUIDTable("standard_lessons"), LoggedTable, Deleta
 
 object NonGradedAssessmentsTable : UUIDTable("non_graded_assessments"), LoggedTable, DeletableTable {
     val lessonId = reference("lesson_id", LessonsTable)
-    val form = jsonColumn<String>("form").nullable()
+    val form = jsonColumn<String>("form") // Entries
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
 
 object GradedAssessmentsTable : UUIDTable("graded_assessments"), LoggedTable, DeletableTable {
     val lessonId = reference("lesson_id", LessonsTable)
-    val form = jsonColumn<String>("form").nullable()
+    val form = jsonColumn<String>("form") // Entries
     val areQuestionsShuffled = bool("are_questions_shuffled")
     val maximumAllowedAttempts = integer("maximum_allowed_attempts")
     val areAnswersShown = bool("are_answers_shown")

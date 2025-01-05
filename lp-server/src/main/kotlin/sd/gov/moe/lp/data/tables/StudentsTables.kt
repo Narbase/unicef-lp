@@ -20,7 +20,7 @@ object StudentLessonsTable : UUIDTable("student_lessons"), LoggedTable, Deletabl
     val studentId = reference("student_id", StudentsTable)
     val lessonId = reference("lesson_id", LessonsTable)
     val progress = double("progress")
-    val answers = jsonColumn<String>("answers").nullable()
+    val answers = jsonColumn<String>("answers").nullable() // Answers
 
     // constraint: student and lesson are unique
     override val isDeleted = deletedColumn()

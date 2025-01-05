@@ -4,10 +4,10 @@
 
 package sd.gov.moe.lp.router
 
+import sd.gov.moe.lp.dto.domain.admin.GroupsCrudEndpoint
 import sd.gov.moe.lp.dto.domain.hello_world.*
 import sd.gov.moe.lp.dto.models.roles.Privilege
 import sd.gov.moe.lp.router.CrudEndPoint.CrudEndpoints.*
-
 
 
 object Routing {
@@ -18,7 +18,11 @@ object Routing {
                 "hello_world" {
                     route(HelloWorldEndPoint)
                 }
-
+                "admin" {
+                    "groups" {
+                        crud(GroupsCrudEndpoint)
+                    }
+                }
             }
         }
     }

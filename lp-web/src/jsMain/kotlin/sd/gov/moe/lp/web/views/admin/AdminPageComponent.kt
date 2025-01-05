@@ -23,6 +23,7 @@ import sd.gov.moe.lp.web.utils.scrollable.scrollable
 import sd.gov.moe.lp.web.utils.views.mediumScreen
 import sd.gov.moe.lp.web.views.admin.roles.RolesManagementComponent
 import sd.gov.moe.lp.web.views.admin.staff.StaffManagementComponent
+import sd.gov.moe.lp.web.views.admin.users.groups.GroupsManagementComponent
 import sd.gov.moe.lp.web.views.basePage.BasePageViewModel
 
 /*
@@ -35,6 +36,7 @@ class AdminPageComponent : Component() {
         AdminTabs.Staff to StaffManagementComponent(showCurrent = true),
         AdminTabs.InActiveStaff to StaffManagementComponent(showCurrent = false),
         AdminTabs.Roles to RolesManagementComponent(),
+        AdminTabs.Groups to GroupsManagementComponent(),
     )
 
     override fun onViewCreated(lifecycleOwner: LifecycleOwner) {

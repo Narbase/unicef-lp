@@ -11,11 +11,15 @@ enum class AdminTabs(val routeDetails: BasePageViewModel.RouteDetails) {
     InActiveStaff(BasePageViewModel.RouteDetails("/inactive_staff", "Inactive Staff".localized())),
     Roles(BasePageViewModel.RouteDetails("/roles", "Roles".localized())),
 
+    Students(BasePageViewModel.RouteDetails("/students", "Students".localized())),
+    Groups(BasePageViewModel.RouteDetails("/groups", "Groups".localized())),
+
     ;
 
     companion object {
         val subLists = listOf(
             AdminTabSubList("Staff Management".localized(), listOf(Staff, InActiveStaff, Roles)),
+            AdminTabSubList("Users Management".localized(), listOf(Groups, Students)),
         )
     }
 }

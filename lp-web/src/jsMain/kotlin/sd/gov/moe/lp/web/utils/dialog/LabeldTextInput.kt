@@ -6,6 +6,7 @@ import com.narbase.kunafa.core.components.textInput
 import com.narbase.kunafa.core.components.textView
 import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
+import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
 import com.narbase.kunafa.core.dimensions.st
 import com.narbase.kunafa.core.drawable.Color
@@ -29,6 +30,32 @@ fun View.labeledTextInput(
     onChange?.let { textInput.element.oninput = { onChange() } }
     return textInput
 }
+
+fun TextInput.handleOnChange() {
+    resetStyle()
+}
+
+fun View.addErrorStyle() {
+    removeRuleSet(textInputStyle)
+    addRuleSet(textInputErrorStyle)
+}
+
+fun View.resetStyle() {
+    removeRuleSet(textInputErrorStyle)
+    addRuleSet(textInputStyle)
+}
+
+fun TextInput?.validateAndGetText(): String? {
+    val text = this?.text ?: ""
+    if (text.isBlank()) {
+        this?.addErrorStyle()
+        return null
+    } else {
+        this?.resetStyle()
+    }
+    return text
+}
+
 
 fun View.labeledTextArea(
     title: String,
@@ -92,7 +119,7 @@ val textAreaStyle by lazy {
     classRuleSet {
         padding = 4.px
         fontSize = 14.px
-        padding = st("6px 12px")
+        padding = "6px 12px".dimen()
         border = "1px solid ${AppColors.borderColor}"
         borderRadius = 4.px
         focus {
@@ -104,7 +131,7 @@ val textInputErrorStyle by lazy {
     classRuleSet {
         padding = 4.px
         fontSize = 14.px
-        padding = st("6px 12px")
+        padding = "6px 12px".dimen()
         border = "1px solid ${AppColors.redLight}"
         borderRadius = 4.px
     }

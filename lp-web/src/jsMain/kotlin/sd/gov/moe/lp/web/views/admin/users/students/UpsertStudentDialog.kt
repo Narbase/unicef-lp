@@ -1,4 +1,4 @@
-package sd.gov.moe.lp.web.views.admin.users.groups
+package sd.gov.moe.lp.web.views.admin.users.students
 
 
 import com.narbase.kunafa.core.components.*
@@ -10,25 +10,27 @@ import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
 import com.narbase.kunafa.core.dimensions.vh
 import com.narbase.kunafa.core.drawable.Color
-import sd.gov.moe.lp.dto.models.GroupDto
+import sd.gov.moe.lp.dto.common.network.ItemList
+import sd.gov.moe.lp.dto.domain.admin.GetGradesEndpoint
+import sd.gov.moe.lp.dto.models.*
 import sd.gov.moe.lp.web.common.AppColors
+import sd.gov.moe.lp.web.network.remoteProcess
 import sd.gov.moe.lp.web.translations.localized
-import sd.gov.moe.lp.web.utils.dialog.handleOnChange
-import sd.gov.moe.lp.web.utils.dialog.labeledTextInput
-import sd.gov.moe.lp.web.utils.dialog.validateAndGetText
+import sd.gov.moe.lp.web.utils.dialog.*
 import sd.gov.moe.lp.web.utils.scrollable.ScrollableView
 import sd.gov.moe.lp.web.utils.scrollable.scrollable
 import sd.gov.moe.lp.web.utils.views.*
 
-/*
- * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
- */
-class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() {
+class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Component() {
     private var popUp: PopUpDialog? = null
     private var popupScrollable: ScrollableView? = null
 
     private var errorTextView: TextView? = null
-    private var nameTextInput: TextInput? = null
+    private var studentNameTextInput: TextInput? = null
+    private var userNameTextInput: TextInput? = null
+    private var passwordTextInput: TextInput? = null
+    private var gradeDropDownList: RemoteDropDownList<GradeDto>? = null
+    private var studentGrade: GradeDto? = null
 
     override fun View?.getView() = view {
         style {
@@ -38,7 +40,7 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
         popUp = popUpDialog { }
     }
 
-    private fun upsertDialog(groupDto: GroupDto? = null) {
+    private fun upsertDialog(extendedStudentProfileInfoDto: ExtendedStudentProfileInfoDto? = null) {
         popUp?.showDialog {
             verticalLayout {
                 id = "upsertMemberRootView"
@@ -59,7 +61,8 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
                             padding = 20.px
                             fontSize = 16.px
                         }
-                        text = if (groupDto == null) "Add group".localized() else "Edit group".localized()
+                        text =
+                            if (extendedStudentProfileInfoDto == null) "Add student".localized() else "Edit student".localized()
                     }
 
                 }
@@ -81,7 +84,7 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
                                 height = wrapContent
                                 padding = 20.px
                             }
-                            groupName()
+                            infoForm()
                         }
 
                     }
@@ -122,66 +125,102 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
                         text = "Save".localized()
                         id = "SaveButton"
                         onClick = {
-                            onSaveButtonClicked(groupDto)
+                            onSaveButtonClicked(extendedStudentProfileInfoDto)
                         }
                     }
                     viewModel.upsertUiState.clearObservers()
                     saveButton.withLoadingAndError(viewModel.upsertUiState,
                         onRetryClicked = {
-                            onSaveButtonClicked(groupDto)
+                            onSaveButtonClicked(extendedStudentProfileInfoDto)
                         },
                         onLoaded = {
                             popUp?.dismissDialog()
-                            viewModel.getGroups()
+                            viewModel.getStudents()
                         }
                     )
                 }
             }
         }
-        nameTextInput?.element?.focus()
+        studentNameTextInput?.element?.focus()
     }
 
-    private fun onSaveButtonClicked(groupDto: GroupDto? = null) {
+    private fun onSaveButtonClicked(extendedStudentProfileInfoDto: ExtendedStudentProfileInfoDto? = null) {
         isDataValid = true
-        val groupName = nameTextInput.validateAndGetText()?.trim()
-
-        if (groupName.isNullOrBlank()) {
+        val name = studentNameTextInput.validateAndGetText()?.trim()
+        val userName = userNameTextInput.validateAndGetText()?.trim()
+        val password = passwordTextInput.validateAndGetText()?.trim()
+        if (studentGrade == null || name.isNullOrBlank() || userName.isNullOrBlank() || password.isNullOrBlank()) {
             isDataValid = false
         }
-
         errorTextView?.isVisible = isDataValid.not()
         if (isDataValid.not()) return
 
-        val dto = GroupDto(
-            groupDto?.id,
-            groupName ?: return,
+        val dto = ExtendedStudentProfileInfoDto(
+            ExtendedStudentDto(
+                id = extendedStudentProfileInfoDto?.student?.id,
+                fullName = name ?: return,
+                grade = studentGrade ?: return,
+            ),
+            ClientDto(
+                id = extendedStudentProfileInfoDto?.client?.id,
+                userName = userName ?: return,
+                password = password ?: return,
+            )
         )
-        if (groupDto == null) {
-            viewModel.addGroup(dto)
+        if (extendedStudentProfileInfoDto == null) {
+            viewModel.addStudent(dto)
         } else {
-            viewModel.editGroup(dto)
+            viewModel.editStudent(dto)
         }
 
     }
 
     private var isDataValid = false
 
-    private fun View.groupName() {
-        horizontalLayout {
+    private fun View.infoForm() {
+        verticalLayout {
             style {
                 width = matchParent
                 marginBottom = 12.px
             }
             verticalLayout {
                 style {
-                    width = weightOf(3)
+                    width = weightOf(1)
                 }
+                studentNameTextInput = labeledTextInput("Full name".localized())
+                studentNameTextInput?.element?.oninput = {
+                    studentNameTextInput?.handleOnChange()
+                }
+                studentNameTextInput?.id = "FullNameInput"
 
-                nameTextInput = labeledTextInput("Group name".localized())
-                nameTextInput?.element?.oninput = {
-                    nameTextInput?.handleOnChange()
+                gradeDropDownList = setupRemoteDropDownList(
+                    name = "Grade".localized(),
+                    getList = { pageNo, pageSize, searchTerm ->
+                        val response = GetGradesEndpoint.remoteProcess(
+                            GetGradesEndpoint.Request(
+                                pageNo = pageNo,
+                                pageSize = pageSize,
+                                searchTerm = searchTerm,
+                            )
+                        )
+                        ItemList(response.data.listAndTotal.list, response.data.listAndTotal.total.toInt())
+                    },
+                    itemToString = { it.name },
+                    onItemSelected = { studentGrade = it },
+                    defaultItem = studentGrade,
+                    showAutoComplete = true,
+                )
+                userNameTextInput = labeledTextInput("User name".localized())
+                userNameTextInput?.element?.oninput = {
+                    userNameTextInput?.handleOnChange()
                 }
-                nameTextInput?.id = "GroupNameInput"
+                userNameTextInput?.id = "userNameInput"
+
+                passwordTextInput = labeledTextInput("password".localized())
+                passwordTextInput?.element?.oninput = {
+                    passwordTextInput?.handleOnChange()
+                }
+                passwordTextInput?.id = "passwordInput"
             }
             verticalLayout {
                 style {
@@ -195,11 +234,15 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
 
     fun add() {
         upsertDialog()
+        studentGrade = null
     }
 
-    fun edit(dto: GroupDto) {
+    fun edit(dto: ExtendedStudentProfileInfoDto) {
         upsertDialog(dto)
-        nameTextInput?.text = dto.name
+        studentNameTextInput?.text = dto.student.fullName
+        studentGrade = dto.student.grade
+        userNameTextInput?.text = dto.client.userName
+        passwordTextInput?.text = dto.client.password
     }
 
 }

@@ -5,7 +5,8 @@ import kotlin.js.JsExport
 
 @Deprecated("replace with narrator")
 @JsExport
-data class GroupDto(
+data class ClientDto(
     val id: StringUUID?,
-    val name: String,
+    val userName: String,
+    val password: String,
 )

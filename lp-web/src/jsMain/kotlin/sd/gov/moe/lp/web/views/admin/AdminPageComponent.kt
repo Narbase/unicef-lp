@@ -24,6 +24,7 @@ import sd.gov.moe.lp.web.utils.views.mediumScreen
 import sd.gov.moe.lp.web.views.admin.roles.RolesManagementComponent
 import sd.gov.moe.lp.web.views.admin.staff.StaffManagementComponent
 import sd.gov.moe.lp.web.views.admin.users.groups.GroupsManagementComponent
+import sd.gov.moe.lp.web.views.admin.users.students.StudentsManagementComponent
 import sd.gov.moe.lp.web.views.basePage.BasePageViewModel
 
 /*
@@ -37,6 +38,7 @@ class AdminPageComponent : Component() {
         AdminTabs.InActiveStaff to StaffManagementComponent(showCurrent = false),
         AdminTabs.Roles to RolesManagementComponent(),
         AdminTabs.Groups to GroupsManagementComponent(),
+        AdminTabs.Students to StudentsManagementComponent(),
     )
 
     override fun onViewCreated(lifecycleOwner: LifecycleOwner) {

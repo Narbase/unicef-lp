@@ -567,6 +567,35 @@ class CustomDropDownListViewController<T>(
     }
 }
 
+class NarpcDropDownListViewController<T>(
+    private val getList: suspend (pageNo: Int, pageSize: Int, searchTerm: String) -> ItemList<T>,
+    private val isMock: Boolean,
+    private val mockList: Array<T>
+) : RemoteDropDownListViewController<T>("", ItemsRequestFactory<Unit>(), isMock, mockList) {
+
+    override fun getItems() {
+        if (isMock) {
+            items = mockList
+            loadingListState.value = BasicUiState.Loaded
+        } else {
+            getItemsJob?.cancel()
+            getItemsJob = networkCall(
+                before = { loadingListState.value = BasicUiState.Loading },
+                onConnectionError = { loadingListState.value = BasicUiState.Error }
+            ) {
+                val response = getList(page, size, searchTerm ?: "")
+
+                val newItems = response.list
+                if (newItems.size < size)
+                    hasReachedEnd = true
+                items += newItems
+                loadingListState.value = BasicUiState.Loaded
+            }
+        }
+    }
+}
+
+
 
 fun <T> View.setupRemoteDropDownList(
     name: String,
@@ -620,6 +649,38 @@ fun <T> View.setupRemoteDropDownList(
     return RemoteDropDownList(
         name,
         CustomDropDownListViewController(getList, isMock, mockList),
+        defaultItem,
+        defaultItemBySearch,
+        rootStyle,
+        itemToString,
+        onItemSelected,
+        showAutoComplete,
+        viewWidthFactory ?: { viewWidth },
+        slug
+    ).apply {
+        this@setupRemoteDropDownList.mount(this)
+    }
+}
+
+fun <T> View.setupRemoteDropDownList(
+    name: String,
+    getList: suspend (pageNo: Int, pageSize: Int, searchTerm: String) -> ItemList<T>,
+    itemToString: (T) -> String,
+    onItemSelected: (T?) -> Unit,
+    rootStyle: RuleSet? = null,
+    defaultItem: T? = null,
+    showAutoComplete: Boolean = false,
+    viewWidth: Dimension = 300.px,
+    viewWidthFactory: (RuleSet.() -> Dimension)? = null,
+    isMock: Boolean = false,
+    mockList: Array<T> = arrayOf(),
+    slug: String? = null,
+    defaultItemBySearch: ((Array<T>) -> T?)? = null
+): RemoteDropDownList<T> {
+
+    return RemoteDropDownList(
+        name,
+        NarpcDropDownListViewController(getList, isMock, mockList),
         defaultItem,
         defaultItemBySearch,
         rootStyle,

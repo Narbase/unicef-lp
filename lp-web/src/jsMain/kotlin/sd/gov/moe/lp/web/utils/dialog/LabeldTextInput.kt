@@ -6,14 +6,15 @@ import com.narbase.kunafa.core.components.textInput
 import com.narbase.kunafa.core.components.textView
 import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
-import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
-import com.narbase.kunafa.core.dimensions.st
 import com.narbase.kunafa.core.drawable.Color
 import sd.gov.moe.lp.web.common.AppColors
 import sd.gov.moe.lp.web.common.AppFontSizes
 import sd.gov.moe.lp.web.utils.views.TextArea
 import sd.gov.moe.lp.web.utils.views.textArea
+import sd.gov.moe.lp.web.utils.views.theme.AdminTheme.textAreaStyle
+import sd.gov.moe.lp.web.utils.views.theme.AdminTheme.textInputErrorStyle
+import sd.gov.moe.lp.web.utils.views.theme.AdminTheme.textInputStyle
 
 /*
  * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
@@ -99,40 +100,4 @@ private fun View.textAreaField(title: String, textAreaOption: (TextArea.() -> Un
     }
     addRuleSet(textAreaStyle)
     textAreaOption?.invoke(this)
-}
-
-
-val textInputStyle by lazy {
-    classRuleSet {
-        padding = 4.px
-        fontSize = 14.px
-//        padding = st("6px 12px")
-        border = "1px solid ${AppColors.borderColor}"
-        borderRadius = 4.px
-        focus {
-            border = "1px solid ${AppColors.focusInputBorderColor}"
-        }
-    }
-}
-
-val textAreaStyle by lazy {
-    classRuleSet {
-        padding = 4.px
-        fontSize = 14.px
-        padding = "6px 12px".dimen()
-        border = "1px solid ${AppColors.borderColor}"
-        borderRadius = 4.px
-        focus {
-            border = "1px solid ${AppColors.focusInputBorderColor}"
-        }
-    }
-}
-val textInputErrorStyle by lazy {
-    classRuleSet {
-        padding = 4.px
-        fontSize = 14.px
-        padding = "6px 12px".dimen()
-        border = "1px solid ${AppColors.redLight}"
-        borderRadius = 4.px
-    }
 }

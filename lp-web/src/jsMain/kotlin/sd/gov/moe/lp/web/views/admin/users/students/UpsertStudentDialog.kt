@@ -6,24 +6,25 @@ import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
 import com.narbase.kunafa.core.dimensions.dependent.weightOf
 import com.narbase.kunafa.core.dimensions.dependent.wrapContent
-import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
-import com.narbase.kunafa.core.dimensions.vh
-import com.narbase.kunafa.core.drawable.Color
 import sd.gov.moe.lp.dto.common.network.ItemList
 import sd.gov.moe.lp.dto.domain.admin.GetGradesEndpoint
-import sd.gov.moe.lp.dto.models.*
-import sd.gov.moe.lp.web.common.AppColors
+import sd.gov.moe.lp.dto.models.ClientDto
+import sd.gov.moe.lp.dto.models.ExtendedStudentDto
+import sd.gov.moe.lp.dto.models.ExtendedStudentProfileInfoDto
+import sd.gov.moe.lp.dto.models.GradeDto
 import sd.gov.moe.lp.web.network.remoteProcess
 import sd.gov.moe.lp.web.translations.localized
-import sd.gov.moe.lp.web.utils.dialog.*
-import sd.gov.moe.lp.web.utils.scrollable.ScrollableView
-import sd.gov.moe.lp.web.utils.scrollable.scrollable
-import sd.gov.moe.lp.web.utils.views.*
+import sd.gov.moe.lp.web.utils.dialog.validateAndGetText
+import sd.gov.moe.lp.web.utils.horizontalFiller
+import sd.gov.moe.lp.web.utils.views.RemoteDropDownList
+import sd.gov.moe.lp.web.utils.views.popUpDialog
+import sd.gov.moe.lp.web.utils.views.setupRemoteDropDownList
+import sd.gov.moe.lp.web.utils.views.theme.adminTheme
+import sd.gov.moe.lp.web.utils.views.withLoadingAndError
 
 class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Component() {
-    private var popUp: PopUpDialog? = null
-    private var popupScrollable: ScrollableView? = null
+    private var popUp = popUpDialog { }
 
     private var errorTextView: TextView? = null
     private var studentNameTextInput: TextInput? = null
@@ -37,108 +38,40 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
             width = 0.px
             height = 0.px
         }
-        popUp = popUpDialog { }
     }
 
     private fun upsertDialog(extendedStudentProfileInfoDto: ExtendedStudentProfileInfoDto? = null) {
-        popUp?.showDialog {
-            verticalLayout {
-                id = "upsertMemberRootView"
+        adminTheme.showDialog(
+            popUp,
+            title = if (extendedStudentProfileInfoDto == null) "Add student".localized() else "Edit student".localized()
+        ) {
+            infoForm()
+            errorTextView = adminTheme.errorText(this)
+
+            horizontalLayout {
                 style {
-                    height = wrapContent
-                    minWidth = 800.px
                     width = matchParent
-                    backgroundColor = Color.white
-                    borderRadius = 8.px
-                }
-                horizontalLayout {
-                    style {
-                        width = matchParent
-                    }
-                    textView {
-                        style {
-                            fontWeight = "bold"
-                            padding = 20.px
-                            fontSize = 16.px
-                        }
-                        text =
-                            if (extendedStudentProfileInfoDto == null) "Add student".localized() else "Edit student".localized()
-                    }
-
+                    height = wrapContent
+                    justifyContent = JustifyContent.End
                 }
 
-                verticalLayout {
-                    style {
-                        width = matchParent
-                        maxHeight = 60.vh
-                    }
-
-                    popupScrollable = scrollable {
-                        style {
-                            width = matchParent
-                            maxHeight = 60.vh
-                        }
-                        verticalLayout {
-                            style {
-                                width = matchParent
-                                height = wrapContent
-                                padding = 20.px
-                            }
-                            infoForm()
-                        }
-
+                val saveButton = adminTheme.mainButton(this) {
+                    text = "Save".localized()
+                    id = "SaveButton"
+                    onClick = {
+                        onSaveButtonClicked(extendedStudentProfileInfoDto)
                     }
                 }
-
-                errorTextView = textView {
-                    style {
-                        marginBottom = 8.px
-                        fontSize = 14.px
-                        color = AppColors.redLight
-                        padding = 20.px
+                viewModel.upsertUiState.clearObservers()
+                saveButton.withLoadingAndError(viewModel.upsertUiState,
+                    onRetryClicked = {
+                        onSaveButtonClicked(extendedStudentProfileInfoDto)
+                    },
+                    onLoaded = {
+                        popUp.dismissDialog()
+                        viewModel.getStudents()
                     }
-                    isVisible = false
-                    text = "Please enter valid fields values".localized()
-                }
-
-                horizontalLayout {
-                    style {
-                        width = matchParent
-                        height = wrapContent
-                        justifyContent = JustifyContent.End
-                        padding = 20.px
-                    }
-
-                    val saveButton = button {
-                        style {
-                            border = "none"
-                            color = Color.white
-                            padding = "2px 12px".dimen()
-                            backgroundColor = AppColors.narcoreColor
-                            borderRadius = 12.px
-                            pointerCursor()
-                            fontSize = 18.px
-                            hover {
-                                backgroundColor = AppColors.narcoreDarkColor
-                            }
-                        }
-                        text = "Save".localized()
-                        id = "SaveButton"
-                        onClick = {
-                            onSaveButtonClicked(extendedStudentProfileInfoDto)
-                        }
-                    }
-                    viewModel.upsertUiState.clearObservers()
-                    saveButton.withLoadingAndError(viewModel.upsertUiState,
-                        onRetryClicked = {
-                            onSaveButtonClicked(extendedStudentProfileInfoDto)
-                        },
-                        onLoaded = {
-                            popUp?.dismissDialog()
-                            viewModel.getStudents()
-                        }
-                    )
-                }
+                )
             }
         }
         studentNameTextInput?.element?.focus()
@@ -183,49 +116,59 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                 width = matchParent
                 marginBottom = 12.px
             }
-            verticalLayout {
+            horizontalLayout {
                 style {
-                    width = weightOf(1)
+                    width = matchParent
                 }
-                studentNameTextInput = labeledTextInput("Full name".localized())
-                studentNameTextInput?.element?.oninput = {
-                    studentNameTextInput?.handleOnChange()
+                verticalLayout {
+                    style {
+                        width = weightOf(1)
+                    }
+                    studentNameTextInput = adminTheme.labeledTextInput(this, "Full name".localized(), isRequired = true)
                 }
-                studentNameTextInput?.id = "FullNameInput"
-
-                gradeDropDownList = setupRemoteDropDownList(
-                    name = "Grade".localized(),
-                    getList = { pageNo, pageSize, searchTerm ->
-                        val response = GetGradesEndpoint.remoteProcess(
-                            GetGradesEndpoint.Request(
-                                pageNo = pageNo,
-                                pageSize = pageSize,
-                                searchTerm = searchTerm,
+                horizontalFiller(adminTheme.standardFormSpacing)
+                verticalLayout {
+                    style {
+                        width = weightOf(1)
+                    }
+                    adminTheme.label(this, "Grade".localized(), isRequired = true)
+                    gradeDropDownList = setupRemoteDropDownList(
+                        name = "Grade".localized(),
+                        getList = { pageNo, pageSize, searchTerm ->
+                            val response = GetGradesEndpoint.remoteProcess(
+                                GetGradesEndpoint.Request(
+                                    pageNo = pageNo,
+                                    pageSize = pageSize,
+                                    searchTerm = searchTerm,
+                                )
                             )
-                        )
-                        ItemList(response.data.listAndTotal.list, response.data.listAndTotal.total.toInt())
-                    },
-                    itemToString = { it.name },
-                    onItemSelected = { studentGrade = it },
-                    defaultItem = studentGrade,
-                    showAutoComplete = true,
-                )
-                userNameTextInput = labeledTextInput("User name".localized())
-                userNameTextInput?.element?.oninput = {
-                    userNameTextInput?.handleOnChange()
+                            ItemList(response.data.listAndTotal.list, response.data.listAndTotal.total.toInt())
+                        },
+                        itemToString = { it.name },
+                        onItemSelected = { studentGrade = it },
+                        defaultItem = studentGrade,
+                        viewWidthFactory = { matchParent },
+                        showAutoComplete = true,
+                    )
                 }
-                userNameTextInput?.id = "userNameInput"
-
-                passwordTextInput = labeledTextInput("password".localized())
-                passwordTextInput?.element?.oninput = {
-                    passwordTextInput?.handleOnChange()
-                }
-                passwordTextInput?.id = "passwordInput"
             }
-            verticalLayout {
+            horizontalLayout {
                 style {
-                    width = weightOf(1)
-                    marginStart = 12.px
+                    width = matchParent
+                }
+                verticalLayout {
+                    style {
+                        width = weightOf(1)
+                    }
+                    userNameTextInput = adminTheme.labeledTextInput(this, "User name".localized(), isRequired = true)
+                }
+                horizontalFiller(adminTheme.standardFormSpacing)
+                verticalLayout {
+                    style {
+                        width = weightOf(1)
+                    }
+
+                    passwordTextInput = adminTheme.labeledTextInput(this, "password".localized(), isRequired = true)
                 }
             }
         }
@@ -233,16 +176,16 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
     }
 
     fun add() {
-        upsertDialog()
         studentGrade = null
+        upsertDialog()
     }
 
     fun edit(dto: ExtendedStudentProfileInfoDto) {
-        upsertDialog(dto)
         studentNameTextInput?.text = dto.student.fullName
         studentGrade = dto.student.grade
         userNameTextInput?.text = dto.client.userName
         passwordTextInput?.text = dto.client.password
+        upsertDialog(dto)
     }
 
 }

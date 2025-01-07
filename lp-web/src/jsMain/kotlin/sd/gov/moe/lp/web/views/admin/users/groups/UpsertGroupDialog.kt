@@ -4,28 +4,17 @@ package sd.gov.moe.lp.web.views.admin.users.groups
 import com.narbase.kunafa.core.components.*
 import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
-import com.narbase.kunafa.core.dimensions.dependent.weightOf
 import com.narbase.kunafa.core.dimensions.dependent.wrapContent
-import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
-import com.narbase.kunafa.core.dimensions.vh
-import com.narbase.kunafa.core.drawable.Color
 import sd.gov.moe.lp.dto.models.GroupDto
-import sd.gov.moe.lp.web.common.AppColors
 import sd.gov.moe.lp.web.translations.localized
-import sd.gov.moe.lp.web.utils.dialog.handleOnChange
-import sd.gov.moe.lp.web.utils.dialog.labeledTextInput
 import sd.gov.moe.lp.web.utils.dialog.validateAndGetText
-import sd.gov.moe.lp.web.utils.scrollable.ScrollableView
-import sd.gov.moe.lp.web.utils.scrollable.scrollable
-import sd.gov.moe.lp.web.utils.views.*
+import sd.gov.moe.lp.web.utils.views.popUpDialog
+import sd.gov.moe.lp.web.utils.views.theme.adminTheme
+import sd.gov.moe.lp.web.utils.views.withLoadingAndError
 
-/*
- * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
- */
 class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() {
-    private var popUp: PopUpDialog? = null
-    private var popupScrollable: ScrollableView? = null
+    private var popUp = popUpDialog { }
 
     private var errorTextView: TextView? = null
     private var nameTextInput: TextInput? = null
@@ -39,103 +28,37 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
     }
 
     private fun upsertDialog(groupDto: GroupDto? = null) {
-        popUp?.showDialog {
-            verticalLayout {
-                id = "upsertMemberRootView"
+        adminTheme.showDialog(
+            popUp,
+            title = if (groupDto == null) "Add group".localized() else "Edit group".localized()
+        ) {
+            form()
+            errorTextView = adminTheme.errorText(this)
+
+            horizontalLayout {
                 style {
-                    height = wrapContent
-                    minWidth = 800.px
                     width = matchParent
-                    backgroundColor = Color.white
-                    borderRadius = 8.px
-                }
-                horizontalLayout {
-                    style {
-                        width = matchParent
-                    }
-                    textView {
-                        style {
-                            fontWeight = "bold"
-                            padding = 20.px
-                            fontSize = 16.px
-                        }
-                        text = if (groupDto == null) "Add group".localized() else "Edit group".localized()
-                    }
-
+                    height = wrapContent
+                    justifyContent = JustifyContent.End
                 }
 
-                verticalLayout {
-                    style {
-                        width = matchParent
-                        maxHeight = 60.vh
-                    }
-
-                    popupScrollable = scrollable {
-                        style {
-                            width = matchParent
-                            maxHeight = 60.vh
-                        }
-                        verticalLayout {
-                            style {
-                                width = matchParent
-                                height = wrapContent
-                                padding = 20.px
-                            }
-                            groupName()
-                        }
-
+                val saveButton = adminTheme.mainButton(this) {
+                    text = "Save".localized()
+                    id = "SaveButton"
+                    onClick = {
+                        onSaveButtonClicked(groupDto)
                     }
                 }
-
-                errorTextView = textView {
-                    style {
-                        marginBottom = 8.px
-                        fontSize = 14.px
-                        color = AppColors.redLight
-                        padding = 20.px
+                viewModel.upsertUiState.clearObservers()
+                saveButton.withLoadingAndError(viewModel.upsertUiState,
+                    onRetryClicked = {
+                        onSaveButtonClicked(groupDto)
+                    },
+                    onLoaded = {
+                        popUp?.dismissDialog()
+                        viewModel.getGroups()
                     }
-                    isVisible = false
-                    text = "Please enter valid fields values".localized()
-                }
-
-                horizontalLayout {
-                    style {
-                        width = matchParent
-                        height = wrapContent
-                        justifyContent = JustifyContent.End
-                        padding = 20.px
-                    }
-
-                    val saveButton = button {
-                        style {
-                            border = "none"
-                            color = Color.white
-                            padding = "2px 12px".dimen()
-                            backgroundColor = AppColors.narcoreColor
-                            borderRadius = 12.px
-                            pointerCursor()
-                            fontSize = 18.px
-                            hover {
-                                backgroundColor = AppColors.narcoreDarkColor
-                            }
-                        }
-                        text = "Save".localized()
-                        id = "SaveButton"
-                        onClick = {
-                            onSaveButtonClicked(groupDto)
-                        }
-                    }
-                    viewModel.upsertUiState.clearObservers()
-                    saveButton.withLoadingAndError(viewModel.upsertUiState,
-                        onRetryClicked = {
-                            onSaveButtonClicked(groupDto)
-                        },
-                        onLoaded = {
-                            popUp?.dismissDialog()
-                            viewModel.getGroups()
-                        }
-                    )
-                }
+                )
             }
         }
         nameTextInput?.element?.focus()
@@ -166,29 +89,18 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
 
     private var isDataValid = false
 
-    private fun View.groupName() {
+    private fun View.form() {
         horizontalLayout {
             style {
                 width = matchParent
                 marginBottom = 12.px
             }
-            verticalLayout {
-                style {
-                    width = weightOf(3)
-                }
 
-                nameTextInput = labeledTextInput("Group name".localized())
-                nameTextInput?.element?.oninput = {
-                    nameTextInput?.handleOnChange()
-                }
-                nameTextInput?.id = "GroupNameInput"
-            }
-            verticalLayout {
-                style {
-                    width = weightOf(1)
-                    marginStart = 12.px
-                }
-            }
+            nameTextInput = adminTheme.labeledTextInput(
+                this,
+                "Group name".localized(),
+                isRequired = true
+            )
         }
 
     }
@@ -198,8 +110,8 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
     }
 
     fun edit(dto: GroupDto) {
-        upsertDialog(dto)
         nameTextInput?.text = dto.name
+        upsertDialog(dto)
     }
 
 }

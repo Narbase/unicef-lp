@@ -20,12 +20,12 @@ import sd.gov.moe.lp.dto.common.network.crud.CrudDto
 import sd.gov.moe.lp.web.storage.SessionInfo
 import sd.gov.moe.lp.web.translations.localized
 import sd.gov.moe.lp.web.utils.dialog.labeledTextInput
-import sd.gov.moe.lp.web.utils.dialog.textInputStyle
 import sd.gov.moe.lp.web.utils.dialog.titleField
 import sd.gov.moe.lp.web.utils.horizontalFiller
 import sd.gov.moe.lp.web.utils.scrollable.ScrollableView
 import sd.gov.moe.lp.web.utils.scrollable.scrollable
 import sd.gov.moe.lp.web.utils.views.*
+import sd.gov.moe.lp.web.utils.views.theme.AdminTheme.textInputStyle
 
 /*
  * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
@@ -53,6 +53,7 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
 
 
     private fun upsertDialog(staffDto: AdminStaffServerCallerDtos.StaffDto? = null) {
+//        fixme: use the theme
         popUp?.showDialog {
             verticalLayout {
                 id = "upsertMemberRootView"

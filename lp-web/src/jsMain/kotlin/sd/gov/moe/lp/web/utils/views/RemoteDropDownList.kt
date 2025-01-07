@@ -29,6 +29,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.dom.addClass
 import org.w3c.dom.events.EventListener
+import sd.gov.moe.lp.web.utils.views.theme.adminTheme
 
 /*
  * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
@@ -58,9 +59,9 @@ class RemoteDropDownList<T>(
                 height = wrapContent
                 maxHeight = 200.px
                 zIndex = 100
-                border = "1px solid ${AppColors.borderColorHex}"
+                border = adminTheme.standardBorder
                 boxShadow = "0px 6px 8px 1px rgba(0,0,0,0.1)"
-                borderRadius = 4.px
+                borderRadius = adminTheme.standardInputRadius
                 backgroundColor = Color.white
             }
 
@@ -246,8 +247,8 @@ class RemoteDropDownList<T>(
         dropDownListView = horizontalLayout {
             style {
                 width = matchParent
-                borderRadius = 4.px
-                border = "1px solid ${AppColors.borderColorHex}"
+                borderRadius = adminTheme.standardInputRadius
+                border = adminTheme.standardBorder
                 pointerCursor()
                 alignItems = Alignment.Center
             }
@@ -259,7 +260,7 @@ class RemoteDropDownList<T>(
                     width = weightOf(1)
                     fontSize = 14.px
                     color = AppColors.textDarkerGrey
-                    padding = "6px 12px".dimen()
+                    padding = adminTheme.standardInputPadding
                     textAlign = bidirectional(TextAlign.Left, TextAlign.Right)
                     singleLine()
                 }
@@ -307,7 +308,7 @@ class RemoteDropDownList<T>(
                     alignSelf = Alignment.Center
                     alignItems = Alignment.Center
                     padding = 8.px
-                    border = "1px solid ${AppColors.borderColorHex}"
+                    border = adminTheme.standardBorder
                     borderRadius = 50.px
                 }
                 materialIcon("search") {
@@ -594,7 +595,6 @@ class NarpcDropDownListViewController<T>(
         }
     }
 }
-
 
 
 fun <T> View.setupRemoteDropDownList(

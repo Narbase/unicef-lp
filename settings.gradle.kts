@@ -25,6 +25,7 @@ dependencyResolutionManagement {
 }
 
 include(":lp-server")
-include(":lp-web")
+include(":lp-student")
+include(":lp-admin")
 include(":dto-web")
 

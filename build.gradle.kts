@@ -39,7 +39,7 @@ plugins {
 }
 
 tasks.register("buildRelease") {
-    val webAppProject = projects.lpWeb
+    val webAppProject = projects.lpAdmin
 
     val outputJarName = project.name
     val serverProjectName = projects.lpServer.name

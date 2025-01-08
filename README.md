@@ -8,7 +8,7 @@ In the terminal, run `./gradlew lp-server:run`
 
 ### Running the frontend
 
-In the terminal, run `./gradlew :lp-web:jsBrowserDevelopmentRun -t`
+In the terminal, run `./gradlew :lp-admin:jsBrowserDevelopmentRun -t`
 
 ## Understanding the codebase
 

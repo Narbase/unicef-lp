@@ -10,7 +10,7 @@ import sd.gov.moe.lp.dto.common.utils.ListAndTotalDto
 import sd.gov.moe.lp.dto.domain.admin.GetGradesEndpoint
 
 
-class GetGradesEndPointController :
+class GetGradesEndpointController :
     EndpointHandler<GetGradesEndpoint.Request, GetGradesEndpoint.Response>(
         GetGradesEndpoint.Request::class,
         GetGradesEndpoint

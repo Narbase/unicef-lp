@@ -20,7 +20,6 @@ import sd.gov.moe.lp.dto.common.network.ItemList
 import sd.gov.moe.lp.admin.storage.bidirectional
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.BasicUiState
-import sd.gov.moe.lp.dto.common.network.DataResponse
 import sd.gov.moe.lp.admin.utils.PopupZIndex
 import sd.gov.moe.lp.admin.utils.eventbus.LifecycleSubscriber
 import kotlinx.browser.document
@@ -61,7 +60,7 @@ class RemoteDropDownList<T>(
                 zIndex = 100
                 border = adminTheme.standardBorder
                 boxShadow = "0px 6px 8px 1px rgba(0,0,0,0.1)"
-                borderRadius = adminTheme.standardInputRadius
+                borderRadius = adminTheme.standardRadius
                 backgroundColor = Color.white
             }
 
@@ -247,7 +246,7 @@ class RemoteDropDownList<T>(
         dropDownListView = horizontalLayout {
             style {
                 width = matchParent
-                borderRadius = adminTheme.standardInputRadius
+                borderRadius = adminTheme.standardRadius
                 border = adminTheme.standardBorder
                 pointerCursor()
                 alignItems = Alignment.Center

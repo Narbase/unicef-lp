@@ -9,6 +9,7 @@ import com.narbase.kunafa.core.dimensions.dependent.wrapContent
 import com.narbase.kunafa.core.drawable.Color
 import sd.gov.moe.lp.admin.common.AppColors
 import sd.gov.moe.lp.admin.common.AppFontSizes
+import sd.gov.moe.lp.admin.common.AppImages
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.dialog.handleOnChange
 import sd.gov.moe.lp.admin.utils.horizontalFiller
@@ -47,14 +48,14 @@ object AdminTheme {
         return parent.textInput {
             style {
                 width = matchParent
-                borderRadius = standardInputRadius
+                borderRadius = standardRadius
                 backgroundColor = AppColors.white
                 border = standardBorder
                 padding = standardInputPadding
                 alignItems = Alignment.Center
                 placeholder = hint ?: ""
                 fontSize = AppFontSizes.normalButtonSize
-                marginBottom = standardFormSpacing
+                marginBottom = standardSpacing
             }
             block()
         }
@@ -145,7 +146,7 @@ object AdminTheme {
                 simpleLabel(this) {
                     text = label
                 }
-                horizontalFiller(standardFormSpacing)
+                horizontalFiller(standardSpacing)
 
                 if (isRequired) {
                     redStarTextView(this).apply {
@@ -206,8 +207,10 @@ object AdminTheme {
     val standardFocusedBorder = "1px solid ${AppColors.focusInputBorderColor}"
     val standardErrorBorder = "1px solid ${AppColors.redLight}"
     val standardInputPadding = "8px 12px".dimen()
-    val standardFormSpacing = 8.px
-    val standardInputRadius = 4.px
+    val standardSpacing = 8.px
+    val narrowSpacing = 4.px
+    val wideSpacing = 16.px
+    val standardRadius = 4.px
 
     val textInputStyle by lazy {
         classRuleSet {
@@ -302,7 +305,25 @@ object AdminTheme {
                     }
                 }
                 block()
-                element.src = "/public/img/delete.png"
+                element.src = AppImages.DELETE_ICON
+            }
+        }
+
+    fun editButton(parent: View, block: View.() -> Unit): View =
+        parent.apply {
+            imageView {
+                style {
+                    width = 24.px
+                    height = 24.px
+                    borderRadius = 4.px
+                    border = "1px solid transparent"
+                    hover {
+                        backgroundColor = AppColors.white
+                        border = "1px solid ${AppColors.separatorNormal}"
+                    }
+                }
+                block()
+                element.src = AppImages.EDIT_ICON
             }
         }
 }

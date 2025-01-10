@@ -1,5 +1,7 @@
 package sd.gov.moe.lp.dto.common.datetime
 
+import kotlin.js.JsExport
+
 
 /***
 
@@ -24,11 +26,11 @@ Issues to keep in mind:
 - All datetime fields stored in the db are stored as UTC without explcit timezone.
 
  ***/
-
+@JsExport
 class DateTimeDto(val milliSeconds: Long)
 
 /**
  * In format: yyyy-MM-dd
  */
-
+@JsExport
 class DateDto(val date: String)

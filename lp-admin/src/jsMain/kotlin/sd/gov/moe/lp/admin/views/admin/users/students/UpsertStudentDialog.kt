@@ -126,7 +126,7 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                     }
                     studentNameTextInput = adminTheme.labeledTextInput(this, "Full name".localized(), isRequired = true)
                 }
-                horizontalFiller(adminTheme.standardFormSpacing)
+                horizontalFiller(adminTheme.standardSpacing)
                 verticalLayout {
                     style {
                         width = weightOf(1)
@@ -162,7 +162,7 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                     }
                     userNameTextInput = adminTheme.labeledTextInput(this, "User name".localized(), isRequired = true)
                 }
-                horizontalFiller(adminTheme.standardFormSpacing)
+                horizontalFiller(adminTheme.standardSpacing)
                 verticalLayout {
                     style {
                         width = weightOf(1)

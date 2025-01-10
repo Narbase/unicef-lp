@@ -44,7 +44,7 @@ object StudentSubjectsTable : UUIDTable("student_subjects"), LoggedTable, Deleta
     val studentId = reference("student_id", StudentsTable)
     val subjectId = reference("subject_id", SubjectsTable)
     val progress = double("progress")
-    val completedOn = dateTimeWithoutTimezone("completed_on")
+    val completedOn = dateTimeWithoutTimezone("completed_on").nullable()
 
     // constraint: student and lesson are unique
     override val isDeleted = deletedColumn()

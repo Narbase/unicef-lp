@@ -69,4 +69,10 @@ class StudentsManagementViewModel {
 
     }
 
+    fun addStudentsBatch() {
+        basicNetworkCall(upsertUiState) {
+
+        }
+    }
+
 }

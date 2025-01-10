@@ -5,6 +5,7 @@
 package sd.gov.moe.lp.router
 
 import sd.gov.moe.lp.dto.domain.admin.GetGradesEndpoint
+import sd.gov.moe.lp.dto.domain.admin.GetStudentReportCardEndpoint
 import sd.gov.moe.lp.dto.domain.admin.GroupsCrudEndpoint
 import sd.gov.moe.lp.dto.domain.admin.StudentsCrudEndpoint
 import sd.gov.moe.lp.dto.domain.hello_world.*
@@ -31,6 +32,11 @@ object Routing {
                     }
                     "student" {
                         crud(StudentsCrudEndpoint)
+                        "report_card" {
+                            "get" {
+                                route(GetStudentReportCardEndpoint)
+                            }
+                        }
                     }
                 }
             }

@@ -19,11 +19,13 @@ import sd.gov.moe.lp.admin.utils.table.tableCell
 import sd.gov.moe.lp.admin.utils.table.tableRow
 import sd.gov.moe.lp.admin.utils.verticalSeparator
 import sd.gov.moe.lp.admin.utils.views.*
+import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.StudentReportCardDialog
 
 class StudentsManagementComponent : Component() {
     private var paginationControls: PaginationControls? = null
     private val viewModel = StudentsManagementViewModel()
     private val upsertDialog = UpsertStudentDialog(viewModel)
+    private val cardDialog = StudentReportCardDialog()
 
     private var listTableBody: View? = null
     private var contentLayout: View? = null
@@ -47,9 +49,27 @@ class StudentsManagementComponent : Component() {
         listTableBody?.clearAllChildren()
         listTableBody?.apply {
             viewModel.data.forEachIndexed { index, item ->
+                val studentId = item.student.id ?: return@forEachIndexed
+
                 tableRow {
-                    id = item.student.fullName
-                    tableCell(item.student.fullName, 3, 16.px)
+                    tableCell(3) {
+                        textView {
+                            text = item.student.fullName
+                            style {
+                                fontSize = 16.px
+                                width = matchParent
+                                color = AppColors.text
+                                pointerCursor()
+                                hover {
+                                    color = AppColors.textDarkest
+                                }
+                            }
+                            onClick = {
+                                cardDialog.show(studentId)
+                                it.stopPropagation()
+                            }
+                        }
+                    }
                     tableCell(item.client.userName, 3, 16.px)
                     tableCell(item.student.grade.name, 3, 16.px)
                     onClick = {

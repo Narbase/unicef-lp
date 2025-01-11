@@ -36,6 +36,9 @@ object Routing {
                             "get" {
                                 route(GetStudentReportCardEndpoint)
                             }
+                            "get_student_subjects" {
+                                route(GetStudentSubjectsEndpoint)
+                            }
                         }
                     }
                 }

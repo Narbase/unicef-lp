@@ -9,7 +9,7 @@ import kotlin.js.JsExport
 @JsExport
 object GroupsCrudEndpoint : CrudEndPoint<GroupDto, GroupsCrudEndpoint.Filters>() {
     class Filters(
-        val studentId: StringUUID? = null
+        var studentId: StringUUID? = null
     )
 }
 

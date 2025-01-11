@@ -10,7 +10,7 @@ import sd.gov.moe.lp.dto.models.ExtendedStudentReportCardDto
 
 class StudentReportCardViewModel {
     var studentId: StringUUID? = null
-    val uiState = Observable<BasicUiState>()
+    val getReportUiState = Observable<BasicUiState>()
     val downLoadUiState = Observable<BasicUiState>()
     var reportCard: ExtendedStudentReportCardDto? = null
 
@@ -20,7 +20,7 @@ class StudentReportCardViewModel {
 
     fun getReportCard() {
         val id = studentId ?: return
-        basicNetworkCall(uiState) {
+        basicNetworkCall(getReportUiState) {
             val response = GetStudentReportCardEndpoint.remoteProcess(GetStudentReportCardEndpoint.Request(id))
             reportCard = response.data.extendedStudentReportCard
         }

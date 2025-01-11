@@ -20,12 +20,15 @@ import sd.gov.moe.lp.admin.utils.table.tableRow
 import sd.gov.moe.lp.admin.utils.verticalSeparator
 import sd.gov.moe.lp.admin.utils.views.*
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.StudentReportCardDialog
+import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.StudentReportCardViewModel
 
 class StudentsManagementComponent : Component() {
     private var paginationControls: PaginationControls? = null
     private val viewModel = StudentsManagementViewModel()
+    private val reportCardViewModel = StudentReportCardViewModel()
+
     private val upsertDialog = UpsertStudentDialog(viewModel)
-    private val cardDialog = StudentReportCardDialog()
+    private val cardDialog = StudentReportCardDialog(reportCardViewModel)
 
     private var listTableBody: View? = null
     private var contentLayout: View? = null

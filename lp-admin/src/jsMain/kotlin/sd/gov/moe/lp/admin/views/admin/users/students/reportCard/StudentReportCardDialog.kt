@@ -1,7 +1,6 @@
 package sd.gov.moe.lp.admin.views.admin.users.students.reportCard
 
 import com.narbase.kunafa.core.components.*
-import com.narbase.kunafa.core.components.Page.mount
 import com.narbase.kunafa.core.components.layout.LinearLayout
 import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
@@ -24,17 +23,25 @@ import sd.gov.moe.lp.admin.utils.views.pointerCursor
 import sd.gov.moe.lp.admin.utils.views.popUpDialog
 import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 import sd.gov.moe.lp.admin.utils.views.withLoadingAndError
+import sd.gov.moe.lp.admin.views.admin.content.learningPaths.LearningPathsManagementViewModel
+import sd.gov.moe.lp.admin.views.admin.users.groups.GroupsManagementViewModel
+import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.GroupsTableComponent
+import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.LearningPathsTableComponent
+import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.StudentSubjectsTableComponent
+import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.StudentSubjectsTableViewModel
 import sd.gov.moe.lp.dto.common.StringUUID
 import sd.gov.moe.lp.dto.models.ExtendedStudentReportCardDto
 import kotlin.js.Date
 
-class StudentReportCardDialog : Component() {
-    val viewModel = StudentReportCardViewModel()
+class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Component() {
+    //    val viewModel = StudentReportCardViewModel()
     private var popUp = popUpDialog { }
 
     //    private var paginationControls: PaginationControls? = null
-    private var tableContainer: View? = null
     private var tableBody: View? = null
+    private val learningPathsManagementViewModel = LearningPathsManagementViewModel()
+    private val groupsManagementViewModel = GroupsManagementViewModel()
+    private val studentSubjectsTableViewModel = StudentSubjectsTableViewModel()
 
     enum class ReportTabs(val title: String) {
         Subjects("Enrolled subjects".localized()),
@@ -60,7 +67,7 @@ class StudentReportCardDialog : Component() {
                 height = 0.px
             }
             withLoadingAndError(
-                uiState = viewModel.uiState,
+                uiState = viewModel.getReportUiState,
                 onLoaded = { cardDialog() },
                 onRetryClicked = { viewModel.getReportCard() }
             )
@@ -247,9 +254,9 @@ class StudentReportCardDialog : Component() {
             }
             verticalFiller(adminTheme.wideSpacing)
             tabsView()
-            tableContainer = view {
-                tableBody = view {
-
+            tableBody = view {
+                style {
+                    width = matchParent
                 }
             }
 
@@ -277,20 +284,25 @@ class StudentReportCardDialog : Component() {
             }
         }
         tabsToViews[selectedTab]?.addRuleSet(selectedTabRuleSet)
-        tableContainer?.clearAllChildren()
         tableBody?.apply {
             clearAllChildren()
             when (selectedTab) {
-                // fixme: use list and total in the extended dto and paginate the tables
-                ReportTabs.Subjects -> subjectsTable()
-                ReportTabs.Groups -> groupsTable()
-                ReportTabs.Paths -> pathsTable()
+                // fixme: use list and total and get each tab in a separate controller and paginate the tables and change the report dto
+                ReportTabs.Subjects -> {
+                    mount(StudentSubjectsTableComponent(studentSubjectsTableViewModel))
+                }
+
+                ReportTabs.Groups -> {
+                    mount(GroupsTableComponent(groupsManagementViewModel))
+                }
+
+                ReportTabs.Paths -> mount(LearningPathsTableComponent(learningPathsManagementViewModel))
             }
         }
 
     }
 
-    private fun LinearLayout.tabItem(tab: ReportTabs) = linearLayout {
+    private fun LinearLayout.tabItem(tab: ReportTabs) = horizontalLayout {
         style {
             padding = "4px 12px".dimen()
             pointerCursor()
@@ -331,31 +343,6 @@ class StudentReportCardDialog : Component() {
 
     }
 
-    private fun LinearLayout.groupsTable() {
-        listTable {
-            headerCell("Group name".localized(), 1)
-            viewModel.reportCard?.studentGroups?.forEach { item ->
-                tableRow {
-                    id = item.name
-                    tableCell(item.name, 1)
-                }
-            }
-        }
-
-    }
-
-    private fun LinearLayout.pathsTable() {
-        listTable {
-            headerCell("Learning path".localized(), 1)
-            viewModel.reportCard?.studentLearningPaths?.forEach { item ->
-                tableRow {
-                    id = item.name
-                    tableCell(item.name, 1)
-                }
-            }
-        }
-    }
-
     val selectedTabRuleSet by lazy {
         classRuleSet {
             backgroundColor = AppColors.extraLightBackground
@@ -365,6 +352,11 @@ class StudentReportCardDialog : Component() {
 
     fun show(id: StringUUID) {
         viewModel.setStudentId(id)
-        mount(this@StudentReportCardDialog)
+//        mount(this@StudentReportCardDialog)
+        viewModel.getReportCard()
+        learningPathsManagementViewModel.filters.studentId = id
+        groupsManagementViewModel.filters.studentId = id
+        studentSubjectsTableViewModel.setStudentId(id)
+        cardDialog()
     }
 }

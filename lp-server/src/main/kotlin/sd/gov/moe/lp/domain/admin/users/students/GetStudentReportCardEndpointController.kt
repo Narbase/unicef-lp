@@ -6,6 +6,8 @@ import org.joda.time.DateTime
 import sd.gov.moe.lp.common.DataResponse
 import sd.gov.moe.lp.common.EndpointHandler
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
+import sd.gov.moe.lp.domain.admin.users.groups.groupsList
+import sd.gov.moe.lp.domain.admin.users.paths.learningPathList
 import sd.gov.moe.lp.domain.utils.toDto
 import sd.gov.moe.lp.dto.common.datetime.DateTimeDto
 import sd.gov.moe.lp.dto.common.kmmLongOf
@@ -31,86 +33,9 @@ class GetStudentReportCardEndpointController :
             GetStudentReportCardEndpoint.Response(
                 extendedStudentReportCard = ExtendedStudentReportCardDto(
                     studentProfile = student,
-                    studentSubjects = arrayOf(
-                        ExtendedStudentSubjectDto(
-                            subject = SubjectDto(
-                                id = UUID.randomUUID().toStringUUID(),
-                                gradeId = gradesList.random().id!!,
-                                name = "s1",
-                                description = "no",
-                                thumbnailUrl = null,
-                                hasCertificate = true
-                            ),
-                            studentSubject = StudentSubjectDto(
-                                id = UUID.randomUUID().toStringUUID(),
-                                studentId = studentsList.random().student.id!!,
-                                subjectId = UUID.randomUUID().toStringUUID(),
-                                progress = 39.0,
-                                completedOn = null,
-                                enrolledOn = DateTime.now().minusDays(852).toDto(),
-                            ),
-                            studentSubjectAssessments = arrayOf(
-                                StudentAssessmentDto(
-                                    id = UUID.randomUUID().toStringUUID(),
-                                    studentId = studentsList.random().student.id!!,
-                                    assessmentId = UUID.randomUUID().toStringUUID(),
-                                    progress = 100.0,
-                                ) ,
-                                StudentAssessmentDto(
-                                    id = UUID.randomUUID().toStringUUID(),
-                                    studentId = studentsList.random().student.id!!,
-                                    assessmentId = UUID.randomUUID().toStringUUID(),
-                                    progress = 40.0,
-                                ),
-                                StudentAssessmentDto(
-                                    id = UUID.randomUUID().toStringUUID(),
-                                    studentId = studentsList.random().student.id!!,
-                                    assessmentId = UUID.randomUUID().toStringUUID(),
-                                    progress = 0.0,
-                                ),
-                            )
-                        ),
-                        ExtendedStudentSubjectDto(
-                            subject = SubjectDto(
-                                id = UUID.randomUUID().toStringUUID(),
-                                gradeId = gradesList.random().id!!,
-                                name = "s2",
-                                description = null,
-                                thumbnailUrl = null,
-                                hasCertificate = false
-                            ),
-                            studentSubject = StudentSubjectDto(
-                                id = UUID.randomUUID().toStringUUID(),
-                                studentId = studentsList.random().student.id!!,
-                                subjectId = UUID.randomUUID().toStringUUID(),
-                                progress = 100.0,
-                                completedOn = null,
-                                enrolledOn = DateTime.now().minusDays(852).toDto(),
-                            ),
-                            studentSubjectAssessments = arrayOf(
-                                StudentAssessmentDto(
-                                    id = UUID.randomUUID().toStringUUID(),
-                                    studentId = studentsList.random().student.id!!,
-                                    assessmentId = UUID.randomUUID().toStringUUID(),
-                                    progress = 100.0,
-                                ) ,
-                                StudentAssessmentDto(
-                                    id = UUID.randomUUID().toStringUUID(),
-                                    studentId = studentsList.random().student.id!!,
-                                    assessmentId = UUID.randomUUID().toStringUUID(),
-                                    progress = 40.0,
-                                ),
-                                StudentAssessmentDto(
-                                    id = UUID.randomUUID().toStringUUID(),
-                                    studentId = studentsList.random().student.id!!,
-                                    assessmentId = UUID.randomUUID().toStringUUID(),
-                                    progress = 0.0,
-                                ),
-                            )
-                        )
-                    ),
-                    studentGroups = emptyArray(),
-                    studentLearningPaths = emptyArray(),
+                    studentSubjects = studentSubjects,
+                    studentGroups = groupsList.toTypedArray(),
+                    studentLearningPaths = learningPathList.toTypedArray(),
                 )
             )
         )

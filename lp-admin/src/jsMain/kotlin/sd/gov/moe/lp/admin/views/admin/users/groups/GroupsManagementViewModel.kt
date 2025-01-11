@@ -8,12 +8,14 @@ import sd.gov.moe.lp.dto.domain.admin.GroupsCrudEndpoint
 import sd.gov.moe.lp.dto.models.GroupDto
 import sd.gov.moe.lp.admin.network.*
 import sd.gov.moe.lp.admin.utils.BasicUiState
+import sd.gov.moe.lp.dto.domain.admin.LearningPathsCrudEndpoint
 
 class GroupsManagementViewModel {
     private var searchTerm = ""
     val uiState = Observable<BasicUiState>()
     val upsertUiState = Observable<BasicUiState>()
     val getStudentsUiState = Observable<BasicUiState>()
+    val filters = GroupsCrudEndpoint.Filters()
     var data: List<GroupDto> = listOf()
 
     var pageNo = 0
@@ -26,7 +28,7 @@ class GroupsManagementViewModel {
             val dto = CrudDto.GetList.Request(
                 pageNo, pageSize,
                 searchTerm = searchTerm,
-                data = Unit
+                data = filters
             )
             val response = GroupsCrudEndpoint.remoteList(dto).data
             data = response.list.toList()

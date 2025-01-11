@@ -10,7 +10,7 @@ import kotlin.js.JsExport
 @JsExport
 object LearningPathsCrudEndpoint : CrudEndPoint<LearningPathDto, LearningPathsCrudEndpoint.Filters>() {
     class Filters(
-        val studentId: StringUUID? = null
+        var studentId: StringUUID? = null
     )
 }
 

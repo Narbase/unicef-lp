@@ -37,8 +37,8 @@ class AdminPageComponent : Component() {
         AdminTabs.Staff to StaffManagementComponent(showCurrent = true),
         AdminTabs.InActiveStaff to StaffManagementComponent(showCurrent = false),
         AdminTabs.Roles to RolesManagementComponent(),
-        AdminTabs.Groups to GroupsManagementComponent(),
         AdminTabs.Students to StudentsManagementComponent(),
+        AdminTabs.Groups to GroupsManagementComponent(),
     )
 
     override fun onViewCreated(lifecycleOwner: LifecycleOwner) {

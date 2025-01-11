@@ -19,7 +19,7 @@ enum class AdminTabs(val routeDetails: BasePageViewModel.RouteDetails) {
     companion object {
         val subLists = listOf(
             AdminTabSubList("Staff Management".localized(), listOf(Staff, InActiveStaff, Roles)),
-            AdminTabSubList("Users Management".localized(), listOf(Groups, Students)),
+            AdminTabSubList("Users Management".localized(), listOf(Students, Groups)),
         )
     }
 }

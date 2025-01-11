@@ -10,10 +10,7 @@ import com.narbase.kunafa.core.dimensions.percent
 import com.narbase.kunafa.core.dimensions.px
 import com.narbase.kunafa.core.drawable.Color
 import com.narbase.kunafa.core.lifecycle.LifecycleOwner
-import com.narbase.kunafa.core.routing.Router
-import com.narbase.kunafa.core.routing.redirect
-import com.narbase.kunafa.core.routing.route
-import com.narbase.kunafa.core.routing.routeComponent
+import com.narbase.kunafa.core.routing.*
 import sd.gov.moe.lp.dto.domain.hello_world.HelloWorldEndPoint
 import sd.gov.moe.lp.dto.models.roles.Privilege
 import sd.gov.moe.lp.admin.common.AppColors
@@ -82,50 +79,50 @@ class BasePageComponent(
             backgroundColor = Color.white
         }
 
-        navigationBar = horizontalLayout {
-            style {
-                width = matchParent
-                boxShadow = "0px 1px 3px 1px rgba(0,0,0,0.07)"
-                borderBottom = "1px solid ${Color(220, 220, 220)}"
-                zIndex = 1
-                alignItems = Alignment.Center
-            }
-
-            textView {
-                text = "Narcore"
-                style {
-                    fontSize = 18.px
-                    fontWeight = "bold"
-                    padding = 8.px
-                    color = AppColors.narcoreColor
-                    pointerCursor()
-                }
-                onClick = {
-                    Router.navigateTo("/home")
-                }
-            }
-
-            horizontalFiller()
-
-            horizontalLayout {
-                style {
-                    paddingEnd = 8.px
-                }
-                userNameAndMenuLayout()
-
-                serverConnectionStatusIndicator = view {
-                    style {
-                        width = 16.px
-                        height = 16.px
-                        alignSelf = Alignment.Center
-                        marginEnd = 8.px
-                        borderRadius = 8.px
-                        backgroundColor = AppColors.redLight
-                    }
-                    tooltip("Server status".localized(), delay = 0)
-                }
-            }
-        }
+//        navigationBar = horizontalLayout {
+//            style {
+//                width = matchParent
+//                boxShadow = "0px 1px 3px 1px rgba(0,0,0,0.07)"
+//                borderBottom = "1px solid ${Color(220, 220, 220)}"
+//                zIndex = 1
+//                alignItems = Alignment.Center
+//            }
+//
+//            textView {
+//                text = "Narcore"
+//                style {
+//                    fontSize = 18.px
+//                    fontWeight = "bold"
+//                    padding = 8.px
+//                    color = AppColors.narcoreColor
+//                    pointerCursor()
+//                }
+//                onClick = {
+//                    Router.navigateTo("/home")
+//                }
+//            }
+//
+//            horizontalFiller()
+//
+//            horizontalLayout {
+//                style {
+//                    paddingEnd = 8.px
+//                }
+//                userNameAndMenuLayout()
+//
+//                serverConnectionStatusIndicator = view {
+//                    style {
+//                        width = 16.px
+//                        height = 16.px
+//                        alignSelf = Alignment.Center
+//                        marginEnd = 8.px
+//                        borderRadius = 8.px
+//                        backgroundColor = AppColors.redLight
+//                    }
+//                    tooltip("Server status".localized(), delay = 0)
+//                }
+//            }
+//        }
 
         mainContainer = verticalLayout {
             id = "mainContainer"
@@ -134,7 +131,11 @@ class BasePageComponent(
                 width = matchParent
                 height = weightOf(1)
             }
-            routeComponents()
+//            routeComponents()
+            matchFirst {
+                routeComponent(AdminPageComponent.routeDetails.href) { AdminPageComponent() }
+                redirect(AdminPageComponent.routeDetails.href, isExact = false, isAbsoluteDestination = true)
+            }
         }
     }
 

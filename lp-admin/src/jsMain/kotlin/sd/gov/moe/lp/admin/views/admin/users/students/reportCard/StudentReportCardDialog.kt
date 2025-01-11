@@ -12,12 +12,9 @@ import sd.gov.moe.lp.admin.common.AppColors
 import sd.gov.moe.lp.admin.common.AppFontSizes
 import sd.gov.moe.lp.admin.common.AppImages
 import sd.gov.moe.lp.admin.translations.localized
+import sd.gov.moe.lp.admin.utils.BasicUiState
 import sd.gov.moe.lp.admin.utils.horizontalFiller
 import sd.gov.moe.lp.admin.utils.horizontalSeparator
-import sd.gov.moe.lp.admin.utils.table.headerCell
-import sd.gov.moe.lp.admin.utils.table.listTable
-import sd.gov.moe.lp.admin.utils.table.tableCell
-import sd.gov.moe.lp.admin.utils.table.tableRow
 import sd.gov.moe.lp.admin.utils.verticalFiller
 import sd.gov.moe.lp.admin.utils.views.pointerCursor
 import sd.gov.moe.lp.admin.utils.views.popUpDialog
@@ -31,7 +28,6 @@ import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.StudentS
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.StudentSubjectsTableViewModel
 import sd.gov.moe.lp.dto.common.StringUUID
 import sd.gov.moe.lp.dto.models.ExtendedStudentReportCardDto
-import kotlin.js.Date
 
 class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Component() {
     //    val viewModel = StudentReportCardViewModel()
@@ -171,7 +167,7 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                     verticalLayout {
                         textView {
                             text = reportCard.studentSubjects.filter { extendedStudentSubject ->
-                                extendedStudentSubject.studentSubject.progress > 100.0
+                                extendedStudentSubject.studentSubject.progress >= 100.0
                             }.size.toString()
                         }
                         verticalFiller(adminTheme.standardSpacing)
@@ -213,7 +209,7 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                     horizontalFiller(adminTheme.standardSpacing)
                     verticalLayout {
                         textView {
-                            text = reportCard.studentGroups.size.toString()
+                            text = reportCard.studentGroupsCount.toString()
                         }
                         verticalFiller(adminTheme.standardSpacing)
                         textView {
@@ -242,7 +238,7 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                     horizontalFiller(adminTheme.standardSpacing)
                     verticalLayout {
                         textView {
-                            text = reportCard.studentLearningPaths.size.toString()
+                            text = reportCard.studentLearningPathsCount.toString()
                         }
                         verticalFiller(adminTheme.standardSpacing)
                         textView {
@@ -259,6 +255,7 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                     width = matchParent
                 }
             }
+            setSelectedTab(ReportTabs.Subjects)
 
         }
     }
@@ -273,11 +270,9 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                 tabsToViews[it] = view
             }
         }
-
-        setSelectedTab(ReportTabs.Subjects)
     }
 
-    private fun LinearLayout.setSelectedTab(selectedTab: ReportTabs) {
+    private fun setSelectedTab(selectedTab: ReportTabs) {
         tabsToViews.forEach {
             if (it.key != selectedTab) {
                 it.value.removeRuleSet(selectedTabRuleSet)
@@ -287,7 +282,7 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
         tableBody?.apply {
             clearAllChildren()
             when (selectedTab) {
-                // fixme: use list and total and get each tab in a separate controller and paginate the tables and change the report dto
+                // fixme: use list and total and get each tab in a separate controller and paginate the tables and change the report dto to use counts
                 ReportTabs.Subjects -> {
                     mount(StudentSubjectsTableComponent(studentSubjectsTableViewModel))
                 }
@@ -303,6 +298,11 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
     }
 
     private fun LinearLayout.tabItem(tab: ReportTabs) = horizontalLayout {
+        val count = when (tab) {
+            ReportTabs.Subjects -> viewModel.reportCard?.studentSubjects?.size
+            ReportTabs.Groups -> viewModel.reportCard?.studentGroupsCount
+            ReportTabs.Paths -> viewModel.reportCard?.studentLearningPathsCount
+        }
         style {
             padding = "4px 12px".dimen()
             pointerCursor()
@@ -312,35 +312,11 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                 fontSize = AppFontSizes.smallText
                 color = AppColors.textDarkGrey
             }
-            text = "${tab.title} (${viewModel.reportCard?.studentSubjects?.size ?: "-"})"
+            text = "${tab.title} (${count ?: "-"})"
         }
         onClick = {
             setSelectedTab(tab)
         }
-    }
-
-    private fun LinearLayout.subjectsTable() {
-        listTable {
-            headerCell("Subject name".localized(), 1)
-            headerCell("% Subject progress".localized(), 1)
-            headerCell("Completed assessments".localized(), 1)
-            headerCell("% Average assessments score".localized(), 1)
-            headerCell("Enrolled on".localized(), 1)
-            headerCell("Completed on".localized(), 1)
-            viewModel.reportCard?.studentSubjects?.forEach { item ->
-                tableRow {
-                    id = item.studentSubject.id
-                    tableCell(item.subject.name, 1)
-                    tableCell(item.studentSubject.progress.toString(), 1)
-                    tableCell(item.studentSubjectAssessments.filter { it.progress >= 100.0 }.size.toString(), 1)
-                    tableCell(item.studentSubjectAssessments.map { it.progress }.average().toString(), 1)
-                    tableCell(Date(item.studentSubject.enrolledOn.milliSeconds).toDateString(), 1)
-                    tableCell(item.studentSubject.completedOn?.let { Date(it.milliSeconds).toDateString() }
-                        ?: "Not completed", 1)
-                }
-            }
-        }
-
     }
 
     val selectedTabRuleSet by lazy {
@@ -352,11 +328,14 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
 
     fun show(id: StringUUID) {
         viewModel.setStudentId(id)
-//        mount(this@StudentReportCardDialog)
+        viewModel.getReportUiState.clearObservers()
         viewModel.getReportCard()
         learningPathsManagementViewModel.filters.studentId = id
         groupsManagementViewModel.filters.studentId = id
         studentSubjectsTableViewModel.setStudentId(id)
-        cardDialog()
+        viewModel.getReportUiState.observe {
+            if (it == BasicUiState.Loaded)
+                cardDialog()
+        }
     }
 }

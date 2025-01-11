@@ -2,20 +2,13 @@
 
 package sd.gov.moe.lp.domain.admin.users.students
 
-import org.joda.time.DateTime
 import sd.gov.moe.lp.common.DataResponse
 import sd.gov.moe.lp.common.EndpointHandler
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
 import sd.gov.moe.lp.domain.admin.users.groups.groupsList
 import sd.gov.moe.lp.domain.admin.users.paths.learningPathList
-import sd.gov.moe.lp.domain.utils.toDto
-import sd.gov.moe.lp.dto.common.datetime.DateTimeDto
-import sd.gov.moe.lp.dto.common.kmmLongOf
-import sd.gov.moe.lp.dto.common.toStringUUID
-import sd.gov.moe.lp.dto.common.utils.ListAndTotalDto
 import sd.gov.moe.lp.dto.domain.admin.GetStudentReportCardEndpoint
 import sd.gov.moe.lp.dto.models.*
-import java.util.UUID
 
 
 class GetStudentReportCardEndpointController :
@@ -34,8 +27,8 @@ class GetStudentReportCardEndpointController :
                 extendedStudentReportCard = ExtendedStudentReportCardDto(
                     studentProfile = student,
                     studentSubjects = studentSubjects,
-                    studentGroups = groupsList.toTypedArray(),
-                    studentLearningPaths = learningPathList.toTypedArray(),
+                    studentGroupsCount = groupsList.size,
+                    studentLearningPathsCount = learningPathList.size,
                 )
             )
         )

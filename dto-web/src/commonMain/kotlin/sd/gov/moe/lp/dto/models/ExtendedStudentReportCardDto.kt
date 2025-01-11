@@ -7,6 +7,6 @@ import kotlin.js.JsExport
 data class ExtendedStudentReportCardDto(
     val studentProfile: ExtendedStudentProfileInfoDto,
     val studentSubjects: Array<ExtendedStudentSubjectDto>,
-    val studentGroups: Array<GroupDto>,
-    val studentLearningPaths: Array<LearningPathDto>,
+    val studentGroupsCount: Int,
+    val studentLearningPathsCount: Int,
 )

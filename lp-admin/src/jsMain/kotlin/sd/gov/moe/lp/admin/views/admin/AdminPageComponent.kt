@@ -21,6 +21,7 @@ import sd.gov.moe.lp.admin.storage.bidirectional
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.scrollable.scrollable
 import sd.gov.moe.lp.admin.utils.views.mediumScreen
+import sd.gov.moe.lp.admin.views.admin.content.learningPaths.LearningPathsManagementComponent
 import sd.gov.moe.lp.admin.views.admin.roles.RolesManagementComponent
 import sd.gov.moe.lp.admin.views.admin.staff.StaffManagementComponent
 import sd.gov.moe.lp.admin.views.admin.users.groups.GroupsManagementComponent
@@ -39,6 +40,7 @@ class AdminPageComponent : Component() {
         AdminTabs.Roles to RolesManagementComponent(),
         AdminTabs.Students to StudentsManagementComponent(),
         AdminTabs.Groups to GroupsManagementComponent(),
+        AdminTabs.LearningPaths to LearningPathsManagementComponent(),
     )
 
     override fun onViewCreated(lifecycleOwner: LifecycleOwner) {

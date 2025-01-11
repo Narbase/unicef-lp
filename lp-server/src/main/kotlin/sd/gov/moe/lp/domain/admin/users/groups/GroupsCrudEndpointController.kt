@@ -10,31 +10,31 @@ import sd.gov.moe.lp.dto.domain.admin.GroupsCrudEndpoint
 import sd.gov.moe.lp.dto.models.GroupDto
 import java.util.*
 
-class GroupsCrudEndpointController : EndpointCrudController<GroupDto, Unit>(
+class GroupsCrudEndpointController : EndpointCrudController<GroupDto, GroupsCrudEndpoint.Filters>(
     listOf(GroupsCrudEndpoint),
     GroupDto::class,
-    Unit::class,
+    GroupsCrudEndpoint.Filters::class,
 ) {
     override fun getItemsList(
         pageNo: Long,
         pageSize: Int,
         searchTerm: String,
         filters: Map<String, String>,
-        data: Unit?,
+        data: GroupsCrudEndpoint.Filters?,
         clientData: AuthorizedClientData?
     ): ListAndTotal<GroupDto> {
-        return ListAndTotal(list = list, total = list.size.toLong())
+        return ListAndTotal(list = groupsList, total = groupsList.size.toLong())
     }
 
     override fun createItem(item: GroupDto, clientData: AuthorizedClientData?): GroupDto {
         val newItem = GroupDto(id = UUID.randomUUID().toStringUUID(), name = item.name)
-        list = list.plus(newItem)
-        return list.find { it.id == newItem.id } ?: throw IllegalArgumentException("not found")
+        groupsList = groupsList.plus(newItem)
+        return groupsList.find { it.id == newItem.id } ?: throw IllegalArgumentException("not found")
     }
 
     override fun updateItem(item: GroupDto, clientData: AuthorizedClientData?): GroupDto {
-        list = list.map { if (it.id == item.id) item else it }
-        return list.find { it.id == item.id } ?: throw IllegalArgumentException("not found")
+        groupsList = groupsList.map { if (it.id == item.id) item else it }
+        return groupsList.find { it.id == item.id } ?: throw IllegalArgumentException("not found")
     }
 
     override fun deleteItem(id: UUID?, clientData: AuthorizedClientData?) {
@@ -43,7 +43,7 @@ class GroupsCrudEndpointController : EndpointCrudController<GroupDto, Unit>(
 
 }
 
-var list =
+var groupsList =
     listOf(
         GroupDto(id = UUID.randomUUID().toStringUUID(), name = "group 1"),
         GroupDto(id = UUID.randomUUID().toStringUUID(), name = "group 2"),

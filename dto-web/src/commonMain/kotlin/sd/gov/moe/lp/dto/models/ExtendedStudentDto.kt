@@ -9,4 +9,5 @@ data class ExtendedStudentDto(
     val id: StringUUID?,
     val fullName: String,
     val grade: GradeDto,
+    val thumbnailUrl: String?
 )

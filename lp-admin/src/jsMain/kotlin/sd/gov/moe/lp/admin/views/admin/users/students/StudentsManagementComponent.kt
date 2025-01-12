@@ -5,9 +5,7 @@ import com.narbase.kunafa.core.components.layout.LinearLayout
 import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
 import com.narbase.kunafa.core.dimensions.dependent.wrapContent
-import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
-import com.narbase.kunafa.core.drawable.Color
 import com.narbase.kunafa.core.lifecycle.LifecycleOwner
 import sd.gov.moe.lp.admin.common.AppColors
 import sd.gov.moe.lp.admin.translations.localized
@@ -19,6 +17,7 @@ import sd.gov.moe.lp.admin.utils.table.tableCell
 import sd.gov.moe.lp.admin.utils.table.tableRow
 import sd.gov.moe.lp.admin.utils.verticalSeparator
 import sd.gov.moe.lp.admin.utils.views.*
+import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.StudentReportCardDialog
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.StudentReportCardViewModel
 
@@ -120,6 +119,8 @@ class StudentsManagementComponent : Component() {
                     horizontalFiller()
 
                     addStudentButton()
+                    horizontalFiller(adminTheme.standardSpacing)
+                    addStudentsBatchButton()
 
 
                 }
@@ -145,24 +146,20 @@ class StudentsManagementComponent : Component() {
     }
 
     private fun LinearLayout.addStudentButton() {
-        textView {
-            style {
-                color = Color.white
-                padding = "2px 12px".dimen()
-                backgroundColor = AppColors.narcoreColor
-                borderRadius = 12.px
-                pointerCursor()
-                hover {
-                    backgroundColor = AppColors.narcoreDarkColor
-                }
-            }
-
+        adminTheme.mainButton(this, "+ Add new student".localized()) {
             onClick = {
                 upsertDialog.add()
             }
+            id = "addStudentButton"
+        }
+    }
 
-            id = "AddStudentButton"
-            text = "+ Add new student"
+    private fun LinearLayout.addStudentsBatchButton() {
+        adminTheme.mainButton(this, "+ Add multiple students".localized()) {
+            onClick = {
+//                fileUploader {  }
+            }
+            id = "addStudentsBatchButton"
         }
     }
 

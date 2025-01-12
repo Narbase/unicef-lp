@@ -8,9 +8,16 @@ object GroupsTable : UUIDTable("groups"), LoggedTable, DeletableTable {
     override val createdOn = createdOnColumn()
 }
 
+object AutomaticGroupsTable : UUIDTable("automatic_groups"), LoggedTable, DeletableTable {
+    val groupId = reference("group_id", GroupsTable)
+    val gradeId = reference("grade_id", GradesTable)
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
 object GroupAdminsTable : UUIDTable("group_admins"), LoggedTable, DeletableTable {
     val groupId = reference("group_id", GroupsTable)
-    val clientId = reference("client_id",ClientsTable)
+    val clientId = reference("client_id", ClientsTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -25,9 +32,16 @@ object LearningPathsTable : UUIDTable("learning_paths"), LoggedTable, DeletableT
     override val createdOn = createdOnColumn()
 }
 
+object AutomaticLearningPathsTable : UUIDTable("automatic_learning_paths"), LoggedTable, DeletableTable {
+    val pathId = reference("path_id", LearningPathsTable)
+    val gradeId = reference("grade_id", GradesTable)
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
 object LearningPathAdminsTable : UUIDTable("learning_path_admins"), LoggedTable, DeletableTable {
     val pathId = reference("path_id", LearningPathsTable)
-    val clientId = reference("client_id",ClientsTable)
+    val clientId = reference("client_id", ClientsTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }

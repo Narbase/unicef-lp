@@ -19,6 +19,7 @@ import sd.gov.moe.lp.admin.utils.table.tableCell
 import sd.gov.moe.lp.admin.utils.table.tableRow
 import sd.gov.moe.lp.admin.utils.verticalSeparator
 import sd.gov.moe.lp.admin.utils.views.*
+import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 
 class GroupsManagementComponent : Component() {
     private var paginationControls: PaginationControls? = null
@@ -95,7 +96,15 @@ class GroupsManagementComponent : Component() {
                     horizontalFiller()
 
                     addGroupButton()
+                    horizontalFiller(adminTheme.narrowSpacing)
+                    // todo: discuss add to the upsert dialog
+                    adminTheme.mainButton(this, "Edit admins".localized()) {
 
+                    }
+                    horizontalFiller(adminTheme.narrowSpacing)
+                    adminTheme.mainButton(this, "Edit rules".localized()) {
+
+                    }
 
                 }
 
@@ -120,24 +129,11 @@ class GroupsManagementComponent : Component() {
     }
 
     private fun LinearLayout.addGroupButton() {
-        textView {
-            style {
-                color = Color.white
-                padding = "2px 12px".dimen()
-                backgroundColor = AppColors.narcoreColor
-                borderRadius = 12.px
-                pointerCursor()
-                hover {
-                    backgroundColor = AppColors.narcoreDarkColor
-                }
-            }
-
+        adminTheme.mainButton(this, "+ Add new group".localized()) {
             onClick = {
                 upsertDialog.add()
             }
-
             id = "AddGroupButton"
-            text = "+ Add new group"
         }
     }
 

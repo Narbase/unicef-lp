@@ -17,6 +17,9 @@ import sd.gov.moe.lp.admin.network.remoteProcess
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.dialog.validateAndGetText
 import sd.gov.moe.lp.admin.utils.horizontalFiller
+import sd.gov.moe.lp.admin.utils.uploaders.ImageUploader
+import sd.gov.moe.lp.admin.utils.uploaders.imageUploader
+import sd.gov.moe.lp.admin.utils.verticalFiller
 import sd.gov.moe.lp.admin.utils.views.RemoteDropDownList
 import sd.gov.moe.lp.admin.utils.views.popUpDialog
 import sd.gov.moe.lp.admin.utils.views.setupRemoteDropDownList
@@ -32,6 +35,8 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
     private var passwordTextInput: TextInput? = null
     private var gradeDropDownList: RemoteDropDownList<GradeDto>? = null
     private var studentGrade: GradeDto? = null
+    private var imageUploader: ImageUploader? = null
+    private var thumbnailUrl: String? = null
 
     override fun View?.getView() = view {
         style {
@@ -57,7 +62,7 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
 
                 val saveButton = adminTheme.mainButton(this) {
                     text = "Save".localized()
-                    id = "SaveButton"
+                    id = "saveButton"
                     onClick = {
                         onSaveButtonClicked(extendedStudentProfileInfoDto)
                     }
@@ -82,6 +87,8 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
         val name = studentNameTextInput.validateAndGetText()?.trim()
         val userName = userNameTextInput.validateAndGetText()?.trim()
         val password = passwordTextInput.validateAndGetText()?.trim()
+        thumbnailUrl = imageUploader?.imageUrl
+        //  fixme: clean the validation
         if (studentGrade == null || name.isNullOrBlank() || userName.isNullOrBlank() || password.isNullOrBlank()) {
             isDataValid = false
         }
@@ -93,6 +100,7 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                 id = extendedStudentProfileInfoDto?.student?.id,
                 fullName = name ?: return,
                 grade = studentGrade ?: return,
+                thumbnailUrl = thumbnailUrl
             ),
             ClientDto(
                 id = extendedStudentProfileInfoDto?.client?.id,
@@ -152,6 +160,9 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                     )
                 }
             }
+            adminTheme.label(this, "Profile picture".localized(), isRequired = true)
+            imageUploader = imageUploader(defaultImageUrl = thumbnailUrl)
+            verticalFiller(adminTheme.standardSpacing)
             horizontalLayout {
                 style {
                     width = matchParent
@@ -168,7 +179,7 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                         width = weightOf(1)
                     }
 
-                    passwordTextInput = adminTheme.labeledTextInput(this, "password".localized(), isRequired = true)
+                    passwordTextInput = adminTheme.labeledTextInput(this, "Password".localized(), isRequired = true)
                 }
             }
         }
@@ -177,11 +188,13 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
 
     fun add() {
         studentGrade = null
+        thumbnailUrl = null
         upsertDialog()
     }
 
     fun edit(dto: ExtendedStudentProfileInfoDto) {
         studentGrade = dto.student.grade
+        thumbnailUrl = dto.student.thumbnailUrl
         upsertDialog(dto)
         studentNameTextInput?.text = dto.student.fullName
         userNameTextInput?.text = dto.client.userName

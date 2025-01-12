@@ -38,7 +38,8 @@ class StudentsCrudEndpointController : EndpointCrudController<ExtendedStudentPro
                 student = ExtendedStudentDto(
                     id = UUID.randomUUID().toStringUUID(),
                     fullName = item.student.fullName,
-                    grade = item.student.grade
+                    grade = item.student.grade,
+                    thumbnailUrl = item.student.thumbnailUrl,
                 ), client = ClientDto(
                     id = UUID.randomUUID().toStringUUID(),
                     userName = item.client.userName,
@@ -77,7 +78,8 @@ var studentsList =
             student = ExtendedStudentDto(
                 id = UUID.randomUUID().toStringUUID(),
                 fullName = "first student full name",
-                grade = gradesList.random()
+                grade = gradesList.random(),
+                thumbnailUrl = null,
             ),
             ClientDto(
                 id = UUID.randomUUID().toStringUUID(),

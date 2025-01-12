@@ -108,6 +108,16 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                         text = reportCard.studentProfile.client.userName
                     }
                 }
+                horizontalFiller()
+                adminTheme.mainButton(this, "Download report card".localized()) {
+                    onClick = {
+                        viewModel.downloadReportCard()
+                    }
+                    withLoadingAndError(
+                        uiState = viewModel.downLoadUiState,
+                        onLoaded = {},
+                        onRetryClicked = { viewModel.downloadReportCard() })
+                }
             }
             verticalFiller(adminTheme.wideSpacing)
             horizontalLayout {

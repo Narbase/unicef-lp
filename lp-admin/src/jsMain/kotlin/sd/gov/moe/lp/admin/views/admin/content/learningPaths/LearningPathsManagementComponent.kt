@@ -5,11 +5,8 @@ import com.narbase.kunafa.core.components.layout.LinearLayout
 import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
 import com.narbase.kunafa.core.dimensions.dependent.wrapContent
-import com.narbase.kunafa.core.dimensions.dimen
 import com.narbase.kunafa.core.dimensions.px
-import com.narbase.kunafa.core.drawable.Color
 import com.narbase.kunafa.core.lifecycle.LifecycleOwner
-import sd.gov.moe.lp.admin.common.AppColors
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.horizontalFiller
 import sd.gov.moe.lp.admin.utils.scrollable.scrollable
@@ -19,6 +16,7 @@ import sd.gov.moe.lp.admin.utils.table.tableCell
 import sd.gov.moe.lp.admin.utils.table.tableRow
 import sd.gov.moe.lp.admin.utils.verticalSeparator
 import sd.gov.moe.lp.admin.utils.views.*
+import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 
 class LearningPathsManagementComponent : Component() {
     private var paginationControls: PaginationControls? = null
@@ -95,7 +93,15 @@ class LearningPathsManagementComponent : Component() {
                     horizontalFiller()
 
                     addButton()
+                    horizontalFiller(adminTheme.narrowSpacing)
+                    // todo: discuss add to the upsert dialog
+                    adminTheme.mainButton(this, "Edit admins".localized()) {
 
+                    }
+                    horizontalFiller(adminTheme.narrowSpacing)
+                    adminTheme.mainButton(this, "Edit rules".localized()) {
+
+                    }
 
                 }
 
@@ -120,24 +126,11 @@ class LearningPathsManagementComponent : Component() {
     }
 
     private fun LinearLayout.addButton() {
-        textView {
-            style {
-                color = Color.white
-                padding = "2px 12px".dimen()
-                backgroundColor = AppColors.narcoreColor
-                borderRadius = 12.px
-                pointerCursor()
-                hover {
-                    backgroundColor = AppColors.narcoreDarkColor
-                }
-            }
-
-            onClick = {
+        adminTheme.mainButton(this, "+ Add new learning path".localized()) {
+        onClick = {
                 upsertDialog.add()
             }
-
-            id = "AddPathButton"
-            text = "+ Add new learning path"
+            id = "addPathButton"
         }
     }
 

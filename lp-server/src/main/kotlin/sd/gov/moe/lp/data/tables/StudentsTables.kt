@@ -11,7 +11,6 @@ object StudentsTable : UUIDTable("students"), LoggedTable, DeletableTable {
     val fullName = text("full_name")
     val profilePictureUrl = text("profile_picture_url")
     val gradeId = reference("grade_id", GradesTable)
-    val isLessonsOrderRestrictive = bool("is_lessons_order_restrictive")
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -46,7 +45,7 @@ object StudentSubjectsTable : UUIDTable("student_subjects"), LoggedTable, Deleta
     val progress = double("progress")
     val completedOn = dateTimeWithoutTimezone("completed_on").nullable()
 
-    // constraint: student and lesson are unique
+    // constraint: student and subject are unique
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -56,7 +55,7 @@ object StudentGradesTable : UUIDTable("student_grades"), LoggedTable, DeletableT
     val gradeId = reference("grade_id", GradesTable)
 //    val progress = double("progress")
 
-    // constraint: student and lesson are unique
+    // constraint: student and grade are unique
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }

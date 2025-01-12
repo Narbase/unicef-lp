@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.dto.common.enums.LessonType
+import sd.gov.moe.lp.dto.common.enums.SubjectEnrollmentType
 
 object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
     val name = text("name")
@@ -14,7 +15,7 @@ object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
 
 object GradeAdminsTable : UUIDTable("grade_admins"), LoggedTable, DeletableTable {
     val gradeId = reference("grade_id", GradesTable)
-    val clientId = reference("client_id",ClientsTable)
+    val clientId = reference("client_id", ClientsTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -25,13 +26,16 @@ object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
     val description = text("description").nullable()
     val thumbnailUrl = text("thumbnail_url").nullable()
     val hasCertificate = bool("has_certificate")
+    val isLessonsOrderRestrictive = bool("is_lessons_order_restrictive")
+    val hasFeedbackForm = bool("has_feedback_form")
+    val enrollmentType = enum("enrollment_type", SubjectEnrollmentType::class)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
 
 object SubjectAdminsTable : UUIDTable("subject_admins"), LoggedTable, DeletableTable {
     val subjectId = reference("subject_id", SubjectsTable)
-    val clientId = reference("client_id",ClientsTable)
+    val clientId = reference("client_id", ClientsTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }

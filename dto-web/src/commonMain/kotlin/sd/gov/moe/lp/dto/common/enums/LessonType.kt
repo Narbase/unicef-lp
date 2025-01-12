@@ -7,6 +7,7 @@ enum class LessonType(override val persistenceName: String, override val dtoName
     PDF("PDF", "PDF"),
     Video("Video", "Video"),
     HTML("HTML", "HTML"),
-    Assessment("Assessment", "Assessment"),
+    GradedAssessment("GradedAssessment", "GradedAssessment"),
+    NonGradedAssessment("NonGradedAssessment", "NonGradedAssessment"),
     ;
 }

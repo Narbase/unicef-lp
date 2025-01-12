@@ -8,10 +8,9 @@ import sd.gov.moe.lp.data.models.users.UserId
 import sd.gov.moe.lp.data.models.users.UserRm
 import sd.gov.moe.lp.data.models.utils.ListAndTotal
 import sd.gov.moe.lp.data.tables.ClientsTable
-import sd.gov.moe.lp.data.tables.UsersTable
+import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.dto.domain.usersmanagement.UsersCrudDto
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 
@@ -78,21 +77,21 @@ object UsersRepository {
 
         return transaction {
             val query = ClientsTable
-                .innerJoin(UsersTable)
-                .selectAll().where { (UsersTable.isInactive eq (data?.getInactive ?: false)) }
+                .innerJoin(StaffTable)
+                .selectAll().where { (StaffTable.isInactive eq (data?.getInactive ?: false)) }
             if (data?.clientId != null) {
                 query.andWhere { ClientsTable.id eq data.clientId?.toModel() }
             }
             if (searchTerm?.isNotBlank() == true) {
                 query.andWhere {
-                    (UsersTable.fullName.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%") or
-                            (UsersTable.localPhone.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%") or
-                            (UsersTable.callingCode.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%")
+                    (StaffTable.fullName.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%") or
+                            (StaffTable.localPhone.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%") or
+                            (StaffTable.callingCode.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%")
                 }
             }
             val count = query.count()
             val list = query
-                .orderBy(UsersTable.createdOn, SortOrder.DESC)
+                .orderBy(StaffTable.createdOn, SortOrder.DESC)
                 .limit(filter.pageSize, filter.pageNo * filter.pageSize)
                 .map {
                     val dynamicRoles = ClientRolesDao.getClientRoles(it[ClientsTable.id].value)

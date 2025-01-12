@@ -8,12 +8,11 @@ package sd.gov.moe.lp.common
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.reflections.Reflections
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
 import sd.gov.moe.lp.common.exceptions.DisabledUserException
-import sd.gov.moe.lp.data.tables.UsersTable
+import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.deployment.Environment
 import sd.gov.moe.lp.deployment.LaunchConfig
 import sd.gov.moe.lp.domain.user.crud.*
@@ -23,9 +22,6 @@ import sd.gov.moe.lp.dto.models.roles.Privilege
 import sd.gov.moe.lp.router.CrudEndPoint
 import sd.gov.moe.lp.router.EndPoint
 import sd.gov.moe.lp.router.newSubEndPoint
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.SqlExpressionBuilder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.selectAll
 import java.util.*
 import java.util.logging.Logger
@@ -161,9 +157,9 @@ private fun KtorRoute.addDisableAccountInterceptor(privileges: List<Privilege>) 
         val authorizedClientData = call.principal<AuthorizedClientData>()
         val isInactive = transaction {
             authorizedClientData?.id?.let { clientId ->
-                UsersTable.selectAll().where { UsersTable.clientId eq UUID.fromString(clientId) }
+                StaffTable.selectAll().where { StaffTable.clientId eq UUID.fromString(clientId) }
                     .firstOrNull()
-                    ?.let { it[UsersTable.isInactive] || it[UsersTable.isDeleted] }
+                    ?.let { it[StaffTable.isInactive] || it[StaffTable.isDeleted] }
                     ?: true
             }
         }

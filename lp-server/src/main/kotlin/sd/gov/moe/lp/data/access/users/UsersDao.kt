@@ -3,10 +3,9 @@ package sd.gov.moe.lp.data.access.users
 import sd.gov.moe.lp.data.models.users.User
 import sd.gov.moe.lp.data.models.users.UserId
 import sd.gov.moe.lp.data.tables.ClientsTable
-import sd.gov.moe.lp.data.tables.UsersTable
+import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.data.tables.utils.toEntityId
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.util.*
 
 /*
@@ -15,52 +14,52 @@ import java.util.*
 object UsersDao {
 
     fun create(clientId: UUID, fullName: String, callingCode: String, localPhone: String): UserId {
-        val id = UsersTable.insert {
-            it[UsersTable.clientId] = clientId.toEntityId(ClientsTable)
-            it[UsersTable.fullName] = fullName
-            it[UsersTable.callingCode] = callingCode
-            it[UsersTable.localPhone] = localPhone
-        } get UsersTable.id
+        val id = StaffTable.insert {
+            it[StaffTable.clientId] = clientId.toEntityId(ClientsTable)
+            it[StaffTable.fullName] = fullName
+            it[StaffTable.callingCode] = callingCode
+            it[StaffTable.localPhone] = localPhone
+        } get StaffTable.id
         return UserId(id.value)
     }
 
     fun update(clientId: UUID, fullName: String?, callingCode: String?, localPhone: String?) {
-        UsersTable.update({ UsersTable.clientId eq clientId }) { row ->
-            fullName?.let { row[UsersTable.fullName] = it }
-            callingCode?.let { row[UsersTable.callingCode] = it }
-            localPhone?.let { row[UsersTable.localPhone] = it }
+        StaffTable.update({ StaffTable.clientId eq clientId }) { row ->
+            fullName?.let { row[StaffTable.fullName] = it }
+            callingCode?.let { row[StaffTable.callingCode] = it }
+            localPhone?.let { row[StaffTable.localPhone] = it }
         }
     }
 
     fun update(id: UserId, fullName: String?, callingCode: String?, localPhone: String?) {
-        UsersTable.update({ UsersTable.id eq id.value }) { row ->
-            fullName?.let { row[UsersTable.fullName] = it }
-            callingCode?.let { row[UsersTable.callingCode] = it }
-            localPhone?.let { row[UsersTable.localPhone] = it }
+        StaffTable.update({ StaffTable.id eq id.value }) { row ->
+            fullName?.let { row[StaffTable.fullName] = it }
+            callingCode?.let { row[StaffTable.callingCode] = it }
+            localPhone?.let { row[StaffTable.localPhone] = it }
         }
     }
 
-    fun get(id: UserId) = UsersTable
-        .selectAll().where { UsersTable.id eq id.value }
+    fun get(id: UserId) = StaffTable
+        .selectAll().where { StaffTable.id eq id.value }
         .map(::toModel)
         .first()
 
-    fun get(clientId: UUID) = UsersTable
-        .selectAll().where { UsersTable.clientId eq clientId }
+    fun get(clientId: UUID) = StaffTable
+        .selectAll().where { StaffTable.clientId eq clientId }
         .map(::toModel)
         .first()
 
 
     fun toModel(row: ResultRow): User {
         return User(
-            UserId(row[UsersTable.id].value),
-            row[UsersTable.createdOn],
-            row[UsersTable.clientId].value,
-            row[UsersTable.fullName],
-            row[UsersTable.callingCode],
-            row[UsersTable.localPhone],
-            row[UsersTable.isInactive],
-            row[UsersTable.isDeleted],
+            UserId(row[StaffTable.id].value),
+            row[StaffTable.createdOn],
+            row[StaffTable.clientId].value,
+            row[StaffTable.fullName],
+            row[StaffTable.callingCode],
+            row[StaffTable.localPhone],
+            row[StaffTable.isInactive],
+            row[StaffTable.isDeleted],
         )
     }
 

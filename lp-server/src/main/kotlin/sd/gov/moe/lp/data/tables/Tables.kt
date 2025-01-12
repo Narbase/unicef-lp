@@ -3,17 +3,26 @@ package sd.gov.moe.lp.data.tables
 
 import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
-import sd.gov.moe.lp.dto.common.enums.SmsMessageStatus
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Function
 import org.jetbrains.exposed.sql.QueryBuilder
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.DateColumnType
+import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
+import sd.gov.moe.lp.data.columntypes.jsonColumn
+import sd.gov.moe.lp.domain.logUpload.ParseResultData
+import sd.gov.moe.lp.dto.common.enums.Gender
+import java.awt.image.LookupTable
 
 interface DeletableTable {
     val isDeleted: Column<Boolean>
+}
+
+interface DeletableTableWithRequest {
+    val isDeleted: Column<Boolean>
+    val isDeleteRequested: Column<Boolean>
 }
 
 interface LoggedTable {
@@ -36,7 +45,7 @@ object ClientsTable : LoggedTable, UUIDTable("clients") {
     override val createdOn = createdOnColumn()
 }
 
-object UsersTable : UUIDTable("staff"), LoggedTable, DeletableTable {
+object StaffTable : UUIDTable("staff"), LoggedTable, DeletableTable {
     val clientId = reference("client_id", ClientsTable).uniqueIndex()
     val fullName = text("full_name")
     val callingCode = text("calling_code") // with leading +
@@ -52,14 +61,68 @@ object DeviceTokensTable : UUIDTable("device_tokens") {
     val createdOn = createdOnColumn()
 }
 
-object AppsConfigTable : UUIDTable("app_config") {
-    val permissiveUserCode = integer("permissive_user_code")
-    val minimumUserCode = integer("minimum_user_code")
+object TeachersTable : UUIDTable("teachers"), LoggedTable, DeletableTable {
+    val gender = enum("gender", Gender::class)
+    val locationId = reference("location_id", CentersTable)
+    val userId = reference("user_id", ClientsTable)
+    override val createdOn = createdOnColumn()
+    override val isDeleted = deletedColumn()
 }
 
-object SmsRecordTable : LoggedTable, UUIDTable("sms_record") {
-    val message = text("message")
-    val phones = array<String>("phones")
-    val status = enum("status", SmsMessageStatus::class)
+object PartnersTable : UUIDTable("partners"), LoggedTable, DeletableTable {
+    val name = text("name")
+    val stateId = reference("state_id", StatesTable)
+    override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
+
+//fixme: Is the client different from the user in ulp?
+object UserPartnersTable : UUIDTable("user_partners"),LoggedTable {
+    val userId = reference("user_id", ClientsTable)
+    val partnerId = reference("partner_id", PartnersTable)
+    override val createdOn = createdOnColumn()
+}
+
+object UploadResultsTable : UUIDTable("upload_results") , LoggedTable{
+    val results = jsonColumn<ParseResultData>("results")
+    override val createdOn = createdOnColumn()
+}
+
+
+object GameUploadLogTable : UUIDTable("game_upload_log"), LoggedTable {
+    val uploadLogId = reference("upload_log_id", UploadLogTable)
+    val startLevel = integer("start_level")
+    val gameLevel = integer("game_level")
+    val minigame = integer("minigame").nullable()
+    val totalPoints = integer("total_points")
+    val studentPoints = double("student_points")
+    val cutoff = double("cutoff").nullable()
+    val startTime = datetime("start_time")
+    val endTime = datetime("end_time")
+    val playedTimeInMilliSeconds = decimal("played_time_in_milli_seconds", 20, 4) //todo confirm this
+    val playedDate = datetime("played_date")
+//    val additionalInfo = jsonColumn<UploadLogFileController.Companion.AdditionalInfo>("additional_info").nullable()
+    override val createdOn = createdOnColumn()
+    val hash = text("hash").nullable()
+}
+
+object UploadLogTable : UUIDTable("upload_log"), LoggedTable {
+    val studentId = reference("student_id", StudentsTable)
+    val gradeId = reference("grade_id", GradesTable)
+    val gameVersion = text("game_version")
+    val deviceModel = text("device_model")
+    val deviceOsVersion = text("device_os_version")
+    val deviceSerialId = text("device_serial_id")
+    val filePath = text("file_path")
+    override val createdOn = createdOnColumn()
+}
+
+//fixme: Is the log in the students tables enough?
+//object UserActionsLogTable : UUIDTable("user_actions_log"), LoggedTable {
+//    val action = enum("action", UserAction::class)
+//    val userId = reference("user_id", ClientsTable)
+//    val affectedUserId = reference("affected_user_id", ClientsTable).nullable()
+//    val oldLogItem = logItem("old_log_item")
+//    val newLogItem = logItem("new_log_item")
+//    override val createdOn = createdOnColumn()
+//}

@@ -1,17 +1,74 @@
 package sd.gov.moe.lp.data.tables
 
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.jodatime.date
+import org.jetbrains.exposed.sql.jodatime.datetime
+import org.joda.time.DateTime
 import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
+import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
 import sd.gov.moe.lp.dto.common.enums.ActivityType
+import sd.gov.moe.lp.dto.common.enums.Background
+import sd.gov.moe.lp.dto.common.enums.Gender
+import sd.gov.moe.lp.dto.common.enums.StudentStatus
 
 object StudentsTable : UUIDTable("students"), LoggedTable, DeletableTable {
     val clientId = reference("client_id", ClientsTable).uniqueIndex()
     val fullName = text("full_name")
+    val idNumber = text("id_number")
+
+    //    val studentNumber = integer("number")
+    val gender = enum("gender", Gender::class)
+    val status = enum("status", StudentStatus::class)
+    val dateOfBirth = date("date_of_birth")
+    val groupId = reference("group_id", GroupsTable)
+    val schoolName = text("school_name")
+    val callingCode = text("calling_code") // with leading +
+    val localPhone = text("local_phone") // without leading zero
+
+    //    val startDate = date("start_date")
+//    val endDate = date("end_date")
+    val background = enum("background", Background::class)
+    val isActive = bool("is_active").default(true)
+    val isPaused = bool("is_paused").default(false)
     val profilePictureUrl = text("profile_picture_url")
     val gradeId = reference("grade_id", GradesTable)
     override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object StudentsMonitoringTable : UUIDTable("students_monitoring"), LoggedTable {
+    val studentId = reference("student_id", StudentsTable)
+    val stats = jsonColumn<StudentMonitoringStats>("stats")
+    override val createdOn = createdOnColumn()
+    val updatedOn = datetime("updated_on").clientDefault { DateTime() }
+}
+
+object StudentsActivationLogTable : UUIDTable("students_activation_log"), LoggedTable {
+    val isActive = bool("is_active")
+    val reason = text("reason")
+    val studentId = reference("student_id", StudentsTable)
+    val date = date("date")
+    override val createdOn = createdOnColumn()
+}
+
+
+object StudentsPauseLogTable : UUIDTable("students_pause_log"), LoggedTable {
+    val isPaused = bool("is_paused")
+    val reason = text("reason")
+    val studentId = reference("student_id", StudentsTable)
+    val date = date("date")
+    override val createdOn = createdOnColumn()
+}
+
+object StudentsImportFilesTable : UUIDTable("students_import_files"), LoggedTable {
+    val filePath = text("file_path")
+    val groupId = reference("group_id", GroupsTable)
+    val uploadedBy = reference("uploaded_by", StaffTable)
+    val uploadedOn = datetime("uploaded_on")
+    val importedBy = reference("imported_by", StaffTable).nullable()
+    val importedOn = datetime("imported_on").nullable()
     override val createdOn = createdOnColumn()
 }
 
@@ -44,6 +101,7 @@ object StudentSubjectsTable : UUIDTable("student_subjects"), LoggedTable, Deleta
     val subjectId = reference("subject_id", SubjectsTable)
     val progress = double("progress")
     val completedOn = dateTimeWithoutTimezone("completed_on").nullable()
+    val certificate = text("certificate").nullable()
 
     // constraint: student and subject are unique
     override val isDeleted = deletedColumn()

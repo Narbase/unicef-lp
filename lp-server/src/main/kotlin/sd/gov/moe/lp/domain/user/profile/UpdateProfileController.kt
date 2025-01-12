@@ -4,7 +4,7 @@ import sd.gov.moe.lp.common.DataResponse
 import sd.gov.moe.lp.common.Handler
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
 import sd.gov.moe.lp.common.exceptions.UnauthenticatedException
-import sd.gov.moe.lp.data.tables.UsersTable
+import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.dto.domain.user.profile.UpdateUserProfileDto
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -17,10 +17,10 @@ class UpdateProfileController : Handler<UpdateUserProfileDto.RequestDto, Unit>(
     override fun process(requestDto: UpdateUserProfileDto.RequestDto, clientData: AuthorizedClientData?): DataResponse<Unit> {
         val clientId = UUID.fromString(clientData?.id ?: throw UnauthenticatedException())
         transaction {
-            UsersTable.update({ UsersTable.clientId eq clientId }) {
-                it[UsersTable.callingCode] = requestDto.callingCode
-                it[UsersTable.localPhone] = requestDto.localPhone
-                it[UsersTable.fullName] = requestDto.fullName
+            StaffTable.update({ StaffTable.clientId eq clientId }) {
+                it[StaffTable.callingCode] = requestDto.callingCode
+                it[StaffTable.localPhone] = requestDto.localPhone
+                it[StaffTable.fullName] = requestDto.fullName
             }
         }
         return DataResponse()

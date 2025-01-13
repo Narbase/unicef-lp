@@ -141,6 +141,7 @@ object StudentLearningPathsTable : UUIDTable("student_learning_paths"), LoggedTa
 
 object StudentActivityLogTable : UUIDTable("student_activity_log"), LoggedTable {
     val studentId = reference("student_id", StudentsTable)
+    val gradeId = reference("grade_id", GradesTable)
     val activityType = enum("activity_type", ActivityType::class)
     val lessonId = reference("lesson_id", LessonsTable).nullable()
     val score = double("score").nullable()

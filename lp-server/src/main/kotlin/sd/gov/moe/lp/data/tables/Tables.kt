@@ -12,6 +12,7 @@ import org.jetbrains.exposed.sql.jodatime.DateColumnType
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import sd.gov.moe.lp.data.columntypes.jsonColumn
+import sd.gov.moe.lp.data.tables.StudentsTable.default
 import sd.gov.moe.lp.domain.logUpload.ParseResultData
 import sd.gov.moe.lp.dto.common.enums.Gender
 import java.awt.image.LookupTable
@@ -30,7 +31,9 @@ interface LoggedTable {
 }
 
 fun Table.deletedColumn() = bool("is_deleted").default(false)
+fun Table.deleteRequestedColumn() = bool("is_delete_requested").default(false)
 fun Table.createdOnColumn() = dateTimeWithoutTimezone("created_on").defaultExpression(CurrentDateTimeAtUtc())
+fun Table.updatedOnColumn() = dateTimeWithoutTimezone("updated_on").defaultExpression(CurrentDateTimeAtUtc())
 
 class CurrentDateTimeAtUtc : Function<DateTime>(DateColumnType(false)) {
     override fun toQueryBuilder(queryBuilder: QueryBuilder) = queryBuilder {
@@ -45,6 +48,7 @@ object ClientsTable : LoggedTable, UUIDTable("clients") {
     override val createdOn = createdOnColumn()
 }
 
+// todo: Uploaded files tables
 object StaffTable : UUIDTable("staff"), LoggedTable, DeletableTable {
     val clientId = reference("client_id", ClientsTable).uniqueIndex()
     val fullName = text("full_name")
@@ -63,8 +67,8 @@ object DeviceTokensTable : UUIDTable("device_tokens") {
 
 object TeachersTable : UUIDTable("teachers"), LoggedTable, DeletableTable {
     val gender = enum("gender", Gender::class)
-    val locationId = reference("location_id", CentersTable)
-    val userId = reference("user_id", ClientsTable)
+    val centerId = reference("center_id", CentersTable)
+    val staffId = reference("staff_id", StaffTable)
     override val createdOn = createdOnColumn()
     override val isDeleted = deletedColumn()
 }
@@ -77,8 +81,8 @@ object PartnersTable : UUIDTable("partners"), LoggedTable, DeletableTable {
 }
 
 //fixme: Is the client different from the user in ulp?
-object UserPartnersTable : UUIDTable("user_partners"),LoggedTable {
-    val userId = reference("user_id", ClientsTable)
+object StaffPartnersTable : UUIDTable("staff_partners"),LoggedTable {
+    val staffId = reference("staff_id", StaffTable)
     val partnerId = reference("partner_id", PartnersTable)
     override val createdOn = createdOnColumn()
 }
@@ -91,12 +95,12 @@ object UploadResultsTable : UUIDTable("upload_results") , LoggedTable{
 
 object GameUploadLogTable : UUIDTable("game_upload_log"), LoggedTable {
     val uploadLogId = reference("upload_log_id", UploadLogTable)
-    val startLevel = integer("start_level")
-    val gameLevel = integer("game_level")
-    val minigame = integer("minigame").nullable()
-    val totalPoints = integer("total_points")
-    val studentPoints = double("student_points")
-    val cutoff = double("cutoff").nullable()
+//    val startLevel = integer("start_level")
+//    val gameLevel = integer("game_level")
+//    val minigame = integer("minigame").nullable()
+//    val totalPoints = integer("total_points")
+//    val studentPoints = double("student_points")
+//    val cutoff = double("cutoff").nullable()
     val startTime = datetime("start_time")
     val endTime = datetime("end_time")
     val playedTimeInMilliSeconds = decimal("played_time_in_milli_seconds", 20, 4) //todo confirm this

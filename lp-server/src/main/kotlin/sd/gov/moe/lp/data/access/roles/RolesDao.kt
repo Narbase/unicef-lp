@@ -30,6 +30,17 @@ object RolesDao {
         return ListAndTotal(list, count)
     }
 
+
+    /*
+//        todo: those should be in the roles table, inserted from the Dao (getOrCreate) or migration?
+ROLE_TEACHER("ROLE_TEACHER", "ROLE_TEACHER"),
+ROLE_STUDENT_ADMIN_OFFICER("ROLE_STUDENT_ADMIN_OFFICER", "ROLE_STUDENT_ADMIN_OFFICER"),
+ROLE_COUNTRY_SUPERVISOR("ROLE_COUNTRY_SUPERVISOR", "ROLE_COUNTRY_SUPERVISOR"),
+ROLE_IT_SUPPORT("ROLE_IT_SUPPORT", "ROLE_IT_SUPPORT"),
+ROLE_MONITORING_AND_EVALUATION_OFFICER("ROLE_MONITORING_AND_EVALUATION_OFFICER", "ROLE_MON_AND_EVAL_OFFICER"),
+ROLE_STAKEHOLDER("ROLE_STAKEHOLDER", "ROLE_STAKEHOLDER"),
+*/
+
     fun get(id: UUID) = RolesTable
         .selectAll().where { RolesTable.id eq id }
         .map(::toModel)

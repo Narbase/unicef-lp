@@ -15,7 +15,7 @@ object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
 
 object GradeAdminsTable : UUIDTable("grade_admins"), LoggedTable, DeletableTable {
     val gradeId = reference("grade_id", GradesTable)
-    val clientId = reference("client_id", ClientsTable)
+    val staffId = reference("staff_id", StaffTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -35,15 +35,14 @@ object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
 
 object SubjectAdminsTable : UUIDTable("subject_admins"), LoggedTable, DeletableTable {
     val subjectId = reference("subject_id", SubjectsTable)
-    val clientId = reference("client_id", ClientsTable)
+    val clientId = reference("client_id", StaffTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
 
-
 object LessonsTable : UUIDTable("lessons"), LoggedTable, DeletableTable {
     val subjectId = reference("subject_id", SubjectsTable)
-    val title = text("name")
+    val title = text("title")
     val type = enum("type", LessonType::class)
     val order = integer("order")
     override val isDeleted = deletedColumn()

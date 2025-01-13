@@ -44,24 +44,26 @@ object CentersTable : UUIDTable("centers"), LoggedTable, DeletableTable {
     override val isDeleted = deletedColumn()
 }
 
-object GroupsTable : UUIDTable("teachers"), LoggedTable, DeletableTableWithRequest{
+object GroupsTable : UUIDTable("teachers"), LoggedTable, DeletableTableWithRequest {
     val name = text("name")
-    val locationId = reference("location_id", CentersTable)
+    val centerId = reference("center_id", CentersTable)
     val teacherId = reference("teacher_id", TeachersTable)
+
+    // todo: dates already exist for the student?
     val startDate = date("start_date")
     val endDate = date("end_date")
     val education = enum("education", Education::class)
     val partnerId = reference("partner_id", PartnersTable)
     override val isDeleted = deletedColumn()
-    override val isDeleteRequested = bool("is_delete_requested").default(false)
+    override val isDeleteRequested = deleteRequestedColumn()
     override val createdOn = createdOnColumn()
 }
 
-object GroupsMonitoringTable : UUIDTable("groups_monitoring"),LoggedTable {
+object GroupsMonitoringTable : UUIDTable("groups_monitoring"), LoggedTable {
     val groupId = reference("group_id", GroupsTable)
     val stats = jsonColumn<GroupMonitoringStats>("stats")
     override val createdOn = createdOnColumn()
-    val updatedOn = datetime("updated_on").clientDefault { DateTime() }
+    val updatedOn = updatedOnColumn()
 }
 
 object AutomaticGroupsTable : UUIDTable("automatic_groups"), LoggedTable, DeletableTable {
@@ -73,11 +75,11 @@ object AutomaticGroupsTable : UUIDTable("automatic_groups"), LoggedTable, Deleta
 
 object GroupAdminsTable : UUIDTable("group_admins"), LoggedTable, DeletableTable {
     val groupId = reference("group_id", GroupsTable)
-    val clientId = reference("client_id", ClientsTable)
+    val staffId = reference("staff_id", StaffTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
-
+/*
 object LearningPathsTable : UUIDTable("learning_paths"), LoggedTable, DeletableTable {
     val name = text("name")
     val description = text("description").nullable()
@@ -109,3 +111,4 @@ object LearningPathSubjectsTable : UUIDTable("learning_path_subjects"), LoggedTa
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
+*/

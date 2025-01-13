@@ -8,6 +8,7 @@ import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
+import sd.gov.moe.lp.data.tables.StudentLessonsTable.nullable
 import sd.gov.moe.lp.dto.common.enums.ActivityType
 import sd.gov.moe.lp.dto.common.enums.Background
 import sd.gov.moe.lp.dto.common.enums.Gender
@@ -77,6 +78,7 @@ object StudentLessonsTable : UUIDTable("student_lessons"), LoggedTable, Deletabl
     val lessonId = reference("lesson_id", LessonsTable)
     val progress = double("progress")
     val answers = jsonColumn<String>("answers").nullable() // Answers
+    val attempts = integer("attempts").nullable()
 
     // constraint: student and lesson are unique
     override val isDeleted = deletedColumn()
@@ -142,6 +144,8 @@ object StudentActivityLogTable : UUIDTable("student_activity_log"), LoggedTable 
     val activityType = enum("activity_type", ActivityType::class)
     val lessonId = reference("lesson_id", LessonsTable).nullable()
     val score = double("score").nullable()
+    val answers = jsonColumn<String>("answers").nullable() // Answers
+    val attempts = integer("attempts").nullable()
     val startTime = dateTimeWithoutTimezone("start_time")
     val endTime = dateTimeWithoutTimezone("end_time")
     override val createdOn = createdOnColumn()

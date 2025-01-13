@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.jodatime.date
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
+import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.GroupMonitoringStats
@@ -49,7 +50,7 @@ object GroupsTable : UUIDTable("teachers"), LoggedTable, DeletableTableWithReque
     val centerId = reference("center_id", CentersTable)
     val teacherId = reference("teacher_id", TeachersTable)
 
-    // todo: dates already exist for the student?
+    // todo: dates already exist for the student? Why date time?
     val startDate = date("start_date")
     val endDate = date("end_date")
     val education = enum("education", Education::class)

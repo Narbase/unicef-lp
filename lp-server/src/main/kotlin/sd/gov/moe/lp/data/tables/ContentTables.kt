@@ -3,12 +3,13 @@ package sd.gov.moe.lp.data.tables
 import org.jetbrains.exposed.dao.id.UUIDTable
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
+import sd.gov.moe.lp.data.tables.GradesTable.nullable
 import sd.gov.moe.lp.dto.common.enums.LessonType
 import sd.gov.moe.lp.dto.common.enums.SubjectEnrollmentType
 
 object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
     val name = text("name")
-    val thumbnailUrl = text("thumbnail_url").nullable()
+    val thumbnailId = reference("thumbnail_id", UploadedFilesTable).nullable()
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -24,7 +25,7 @@ object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
     val gradeId = reference("grade_id", GradesTable)
     val name = text("name")
     val description = text("description").nullable()
-    val thumbnailUrl = text("thumbnail_url").nullable()
+    val thumbnailId = reference("thumbnail_id", UploadedFilesTable)
     val hasCertificate = bool("has_certificate")
     val isLessonsOrderRestrictive = bool("is_lessons_order_restrictive")
     val hasFeedbackForm = bool("has_feedback_form")
@@ -51,7 +52,7 @@ object LessonsTable : UUIDTable("lessons"), LoggedTable, DeletableTable {
 
 object StandardLessonsTable : UUIDTable("standard_lessons"), LoggedTable, DeletableTable {
     val lessonId = reference("lesson_id", LessonsTable)
-    val filePath = text("file_path")
+    val fileId = reference("file_id", UploadedFilesTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }

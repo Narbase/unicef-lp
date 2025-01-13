@@ -65,6 +65,13 @@ object DeviceTokensTable : UUIDTable("device_tokens") {
     val createdOn = createdOnColumn()
 }
 
+object UploadedFilesTable : UUIDTable("uploaded_files_table"), LoggedTable, DeletableTable {
+    val fileUrl = text("file_url")
+    val fileName = text("file_name")
+    override val createdOn = createdOnColumn()
+    override val isDeleted = deletedColumn()
+}
+
 object TeachersTable : UUIDTable("teachers"), LoggedTable, DeletableTable {
     val gender = enum("gender", Gender::class)
     val centerId = reference("center_id", CentersTable)
@@ -117,7 +124,7 @@ object UploadLogTable : UUIDTable("upload_log"), LoggedTable {
     val deviceModel = text("device_model")
     val deviceOsVersion = text("device_os_version")
     val deviceSerialId = text("device_serial_id")
-    val filePath = text("file_path")
+    val fileId = reference("file_id", UploadedFilesTable)
     override val createdOn = createdOnColumn()
 }
 

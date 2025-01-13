@@ -24,7 +24,7 @@ object StudentsTable : UUIDTable("students"), LoggedTable, DeletableTableWithReq
     val schoolName = text("school_name").nullable()
     val callingCode = text("calling_code").nullable() // with leading +
     val localPhone = text("local_phone").nullable() // without leading zero
-    val profilePictureUrl = text("profile_picture_url").nullable()
+    val profilePictureId = reference("profile_picture_id", UploadedFilesTable).nullable()
     val gradeId = reference("grade_id", GradesTable)
 
     override val isDeleted = deletedColumn()
@@ -36,9 +36,11 @@ object StudentControlsTable : UUIDTable("student_controls"), LoggedTable, Deleta
     // todo: this is created from the dashboard for existing students that are imported from the tablets
     val studentId = reference("student_id", StudentsTable)
     val status = enum("status", StudentStatus::class).default(StudentStatus.Active)
+
     //todo: multiple groups for one student?
     val groupId = reference("group_id", GroupsTable)
-    // todo: dates already exist for the group?
+
+    // todo: dates already exist for the group? why date time and not date?
     val startDate = date("start_date")
     val endDate = date("end_date")
     val background = enum("background", Background::class)
@@ -53,6 +55,7 @@ object StudentsMonitoringTable : UUIDTable("students_monitoring"), LoggedTable {
     val studentId = reference("student_id", StudentsTable)
     val stats = jsonColumn<StudentMonitoringStats>("stats")
     override val createdOn = createdOnColumn()
+
     // todo: confirm change from clientDefault { DateTime() } to dateTimeWithoutTimezone("updated_on").defaultExpression(CurrentDateTimeAtUtc())
     val updatedOn = updatedOnColumn()
 }
@@ -65,7 +68,7 @@ object StudentStatusLogTable : UUIDTable(""), LoggedTable {
 }
 
 object StudentsImportFilesTable : UUIDTable("students_import_files"), LoggedTable {
-    val filePath = text("file_path")
+    val fileId = reference("file_id", UploadedFilesTable)
     val groupId = reference("group_id", GroupsTable)
     val uploadedBy = reference("uploaded_by", StaffTable)
     val uploadedOn = dateTimeWithoutTimezone("uploaded_on")

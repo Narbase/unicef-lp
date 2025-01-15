@@ -8,6 +8,7 @@ import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
+import sd.gov.moe.lp.data.tables.StudentLessonsTable.nullable
 import sd.gov.moe.lp.dto.common.enums.ActivityType
 import sd.gov.moe.lp.dto.common.enums.Background
 import sd.gov.moe.lp.dto.common.enums.Gender
@@ -80,8 +81,18 @@ object StudentsImportFilesTable : UUIDTable("students_import_files"), LoggedTabl
 object StudentLessonsTable : UUIDTable("student_lessons"), LoggedTable, DeletableTable {
     val studentId = reference("student_id", StudentsTable)
     val lessonId = reference("lesson_id", LessonsTable)
+    val isCompleted = bool("is_completed")
+
+    // constraint: student and lesson are unique
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object StudentAssessmentsTable : UUIDTable("student_assessments"), LoggedTable, DeletableTable {
+    val studentId = reference("student_id", StudentsTable)
+    val lessonId = reference("lesson_id", LessonsTable)
     val progress = double("progress")
-    val answers = jsonColumn<String>("answers").nullable() // Answers
+    val answers = jsonColumn<String>("answers")
     val attempts = integer("attempts").nullable()
 
     // constraint: student and lesson are unique
@@ -89,23 +100,10 @@ object StudentLessonsTable : UUIDTable("student_lessons"), LoggedTable, Deletabl
     override val createdOn = createdOnColumn()
 }
 
-/*
-object StudentAssessmentsTable : UUIDTable("student_assessments"), LoggedTable, DeletableTable {
-    val studentId = reference("student_id", StudentsTable)
-    val lessonId = reference("lesson_id", LessonsTable)
-    val progress = double("progress")
-    val answers = jsonColumn<String>("answers")
-
-    // constraint: student and lesson are unique
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
- */
-
 object StudentSubjectsTable : UUIDTable("student_subjects"), LoggedTable, DeletableTable {
     val studentId = reference("student_id", StudentsTable)
     val subjectId = reference("subject_id", SubjectsTable)
-    val progress = double("progress")
+//    val progress = double("progress")
     val completedOn = dateTimeWithoutTimezone("completed_on").nullable()
     val certificate = text("certificate").nullable()
 

@@ -1,6 +1,9 @@
 package sd.gov.moe.lp.data.tables
 
 
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IdTable
+import org.jetbrains.exposed.dao.id.IntIdTable
 import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import org.jetbrains.exposed.dao.id.UUIDTable
@@ -88,13 +91,13 @@ object PartnersTable : UUIDTable("partners"), LoggedTable, DeletableTable {
 }
 
 //fixme: Is the client different from the user in ulp?
-object StaffPartnersTable : UUIDTable("staff_partners"),LoggedTable {
+object StaffPartnersTable : UUIDTable("staff_partners"), LoggedTable {
     val staffId = reference("staff_id", StaffTable)
     val partnerId = reference("partner_id", PartnersTable)
     override val createdOn = createdOnColumn()
 }
 
-object UploadResultsTable : UUIDTable("upload_results") , LoggedTable{
+object UploadResultsTable : UUIDTable("upload_results"), LoggedTable {
     val results = jsonColumn<ParseResultData>("results")
     override val createdOn = createdOnColumn()
 }
@@ -102,7 +105,8 @@ object UploadResultsTable : UUIDTable("upload_results") , LoggedTable{
 
 object GameUploadLogTable : UUIDTable("game_upload_log"), LoggedTable {
     val uploadLogId = reference("upload_log_id", UploadLogTable)
-//    val startLevel = integer("start_level")
+
+    //    val startLevel = integer("start_level")
 //    val gameLevel = integer("game_level")
 //    val minigame = integer("minigame").nullable()
 //    val totalPoints = integer("total_points")
@@ -112,7 +116,8 @@ object GameUploadLogTable : UUIDTable("game_upload_log"), LoggedTable {
     val endTime = datetime("end_time")
     val playedTimeInMilliSeconds = decimal("played_time_in_milli_seconds", 20, 4) //todo confirm this
     val playedDate = datetime("played_date")
-//    val additionalInfo = jsonColumn<UploadLogFileController.Companion.AdditionalInfo>("additional_info").nullable()
+
+    //    val additionalInfo = jsonColumn<UploadLogFileController.Companion.AdditionalInfo>("additional_info").nullable()
     override val createdOn = createdOnColumn()
     val hash = text("hash").nullable()
 }
@@ -137,3 +142,9 @@ object UploadLogTable : UUIDTable("upload_log"), LoggedTable {
 //    val newLogItem = logItem("new_log_item")
 //    override val createdOn = createdOnColumn()
 //}
+
+object DashboardMigrationsTable : IntIdTable("dashboard_migration"), LoggedTable {
+    val migration = text("migration")
+    val version = text("version").uniqueIndex()
+    override val createdOn = createdOnColumn()
+}

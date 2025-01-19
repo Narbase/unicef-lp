@@ -173,3 +173,10 @@ CREATE TABLE IF NOT EXISTS student_activity_log (
  CONSTRAINT fk_student_activity_log_grade_id__id FOREIGN KEY (grade_id) REFERENCES grades(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
  CONSTRAINT fk_student_activity_log_lesson_id__id FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE RESTRICT ON UPDATE RESTRICT
  );
+
+CREATE TABLE IF NOT EXISTS dashboard_migration (
+ id INTEGER PRIMARY KEY,
+ migration TEXT NOT NULL,
+ version TEXT NOT NULL UNIQUE,
+ installed_on TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL
+);

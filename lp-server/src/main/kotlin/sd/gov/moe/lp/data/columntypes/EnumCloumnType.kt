@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
 fun <E> Table.enum(name: String, enumClass: KClass<E>): Column<E> where E : Enum<E>, E : EnumPersistenceName =
     customEnumeration(
         name,
+        sql = "TEXT",
         toDb = { it.persistenceName },
         fromDb = { persistenceName ->
             enumClass.java.enumConstants.firstOrNull { it.persistenceName == persistenceName }

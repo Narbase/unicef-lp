@@ -25,12 +25,12 @@ fun Routing.setupAdminRoutes() {
                     crud(
                         "/users",
                         UsersCrudController(),
-                        Privilege.UsersManagement,
+//                        Privilege.UsersManagement,
                     )
                     crud(
                         "/roles",
                         RolesCurdController(),
-                        Privilege.UsersManagement,
+//                        Privilege.UsersManagement,
                     )
                     post("/enable_user") {
                         EnableStaffController().handle(call)

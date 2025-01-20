@@ -2,10 +2,15 @@ package sd.gov.moe.lp.dto.common.enums
 
 import sd.gov.moe.lp.dto.common.EnumDtoName
 
-enum class SubjectEnrollmentType(override val persistenceName: String, override val dtoName: String) : EnumPersistenceName,
+enum class SubjectEnrollmentType(persistenceName: String? = null, dtoName: String? = null) :
+    EnumPersistenceName,
     EnumDtoName {
-    Admin("Admin", "Admin"),
-    Self("Self", "Self"),
-    Automatic("Automatic", "Automatic"),
+    Self,
+//    SelfForGrade,
+    AutomaticForGrade,
+//    AutomaticForAll,
     ;
+
+    override val dtoName: String = dtoName ?: name
+    override val persistenceName: String = persistenceName ?: name
 }

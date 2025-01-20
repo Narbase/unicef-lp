@@ -2,10 +2,14 @@ package sd.gov.moe.lp.dto.common.enums
 
 import sd.gov.moe.lp.dto.common.EnumDtoName
 
-enum class ActivityType(override val persistenceName: String, override val dtoName: String) : EnumPersistenceName,
+enum class ActivityType(persistenceName: String? = null, dtoName: String? = null) : EnumPersistenceName,
     EnumDtoName {
-    Login("Login", "Login"),
-    Lesson("Lesson", "Lesson"),
-    Logout("Logout", "Logout"),
+    Login,
+    Lesson,
+    Enrollment,
+    Logout,
     ;
+
+    override val dtoName: String = dtoName ?: name
+    override val persistenceName: String = persistenceName ?: name
 }

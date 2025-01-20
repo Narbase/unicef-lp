@@ -2,8 +2,13 @@ package sd.gov.moe.lp.dto.common.enums
 
 import sd.gov.moe.lp.dto.common.EnumDtoName
 
-enum class Education(override val dtoName: String, override val persistenceName: String) : EnumDtoName, EnumPersistenceName {
-    Unknown("Unknown", "Unknown"),
-    Formal("Formal", "Formal"),
-    Informal("Informal", "Informal")
+enum class Education(persistenceName: String? = null, dtoName: String? = null) : EnumDtoName, EnumPersistenceName {
+    Unknown,
+    Formal,
+    Informal,
+    ;
+
+    override val dtoName: String = dtoName ?: name
+    override val persistenceName: String = persistenceName ?: name
+
 }

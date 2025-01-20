@@ -1,6 +1,8 @@
 package sd.gov.moe.lp.data.tables
 
 
+import com.google.gson.JsonElement
+import com.narbase.oss.dto.common.forms.EntryListDto
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.IntIdTable
@@ -18,6 +20,7 @@ import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.tables.StudentsTable.default
 import sd.gov.moe.lp.domain.logUpload.ParseResultData
 import sd.gov.moe.lp.dto.common.enums.Gender
+import sd.gov.moe.lp.dto.common.enums.StaffActions
 import java.awt.image.LookupTable
 
 interface DeletableTable {
@@ -71,6 +74,13 @@ object DeviceTokensTable : UUIDTable("device_tokens") {
 object UploadedFilesTable : UUIDTable("uploaded_files_table"), LoggedTable, DeletableTable {
     val fileUrl = text("file_url")
     val fileName = text("file_name")
+    override val createdOn = createdOnColumn()
+    override val isDeleted = deletedColumn()
+}
+
+object FormTemplatesTable : UUIDTable("form_templates"), LoggedTable, DeletableTable {
+    val template = jsonColumn<EntryListDto>("template")
+    val name = text("name")
     override val createdOn = createdOnColumn()
     override val isDeleted = deletedColumn()
 }
@@ -133,16 +143,16 @@ object UploadLogTable : UUIDTable("upload_log"), LoggedTable {
     override val createdOn = createdOnColumn()
 }
 
-//fixme: Is the log in the students tables enough?
-//object UserActionsLogTable : UUIDTable("user_actions_log"), LoggedTable {
-//    val action = enum("action", UserAction::class)
-//    val userId = reference("user_id", ClientsTable)
-//    val affectedUserId = reference("affected_user_id", ClientsTable).nullable()
-//    val oldLogItem = logItem("old_log_item")
-//    val newLogItem = logItem("new_log_item")
-//    override val createdOn = createdOnColumn()
-//}
+object StaffActionsLogTable : UUIDTable("staff_actions_log"), LoggedTable {
+    val action = enum("action", StaffActions::class)
+    val staffId = reference("staff_id", StaffTable)
+    val subjectId = uuid("subject_id")
+    val event = text("event")
+    val data = jsonColumn<JsonElement>("data").nullable()
+    override val createdOn = createdOnColumn()
+}
 
+//todo: needs discussion
 object DashboardMigrationsTable : IntIdTable("dashboard_migration"), LoggedTable {
     val migration = text("migration")
     val version = text("version").uniqueIndex()

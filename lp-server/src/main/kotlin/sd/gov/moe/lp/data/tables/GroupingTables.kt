@@ -67,6 +67,7 @@ object GroupsMonitoringTable : UUIDTable("groups_monitoring"), LoggedTable {
     val updatedOn = updatedOnColumn()
 }
 
+// From online LP
 object AutomaticGroupsTable : UUIDTable("automatic_groups"), LoggedTable, DeletableTable {
     val groupId = reference("group_id", GroupsTable)
     val gradeId = reference("grade_id", GradesTable)

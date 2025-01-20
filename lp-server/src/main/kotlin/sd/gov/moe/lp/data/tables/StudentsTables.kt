@@ -59,7 +59,7 @@ object StudentsMonitoringTable : UUIDTable("students_monitoring"), LoggedTable {
     val updatedOn = updatedOnColumn()
 }
 
-object StudentStatusLogTable : UUIDTable(""), LoggedTable {
+object StudentStatusLogTable : UUIDTable("student_status_log"), LoggedTable {
     val reason = text("reason")
     val studentId = reference("student_id", StudentsTable)
     val status = enum("status", StudentStatus::class)
@@ -115,7 +115,9 @@ object StudentSubjectsTable : UUIDTable("student_subjects"), LoggedTable, Deleta
 
     //    val progress = double("progress")
     val completedOn = dateTimeWithoutTimezone("completed_on").nullable()
-    val certificate = text("certificate").nullable()
+
+    val certificateId = reference("certificate_id", UploadedFilesTable).nullable()
+    val feedback = jsonColumn<AnswersListDto>("feedback").nullable()
 
     // constraint: student and subject are unique
     override val isDeleted = deletedColumn()
@@ -159,10 +161,14 @@ object StudentActivityLogTable : UUIDTable("student_activity_log"), LoggedTable 
     val studentId = reference("student_id", StudentsTable)
     val gradeId = reference("grade_id", GradesTable)
     val activityType = enum("activity_type", ActivityType::class)
+    val data = jsonColumn<String>("data")
+    /*
     val lessonId = reference("lesson_id", LessonsTable).nullable()
     val score = double("score").nullable()
     val answers = jsonColumn<AnswersListDto>("answers").nullable() // Answers
     val attempts = integer("attempts").nullable()
+
+     */
     val startTime = dateTimeWithoutTimezone("start_time")
     val endTime = dateTimeWithoutTimezone("end_time")
     override val createdOn = createdOnColumn()

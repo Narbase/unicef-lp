@@ -15,6 +15,7 @@ object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
     override val createdOn = createdOnColumn()
 }
 
+// todo: Check access levels and roles
 object GradeAdminsTable : UUIDTable("grade_admins"), LoggedTable, DeletableTable {
     val gradeId = reference("grade_id", GradesTable)
     val staffId = reference("staff_id", StaffTable)
@@ -23,18 +24,29 @@ object GradeAdminsTable : UUIDTable("grade_admins"), LoggedTable, DeletableTable
 }
 
 object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
-    val gradeId = reference("grade_id", GradesTable)
     val name = text("name")
     val description = text("description").nullable()
-    val thumbnailId = reference("thumbnail_id", UploadedFilesTable)
+    val thumbnailId = reference("thumbnail_id", UploadedFilesTable).nullable()
     val hasCertificate = bool("has_certificate")
+    // todo: clarify certificates handling (templates, editable, etc...)
+//    val certificate = reference("certificate", UploadedFilesTable).nullable() // svg, html
     val isLessonsOrderRestrictive = bool("is_lessons_order_restrictive")
-    val hasFeedbackForm = bool("has_feedback_form")
+//    val hasFeedbackForm = bool("has_feedback_form")
+    val feedbackFormId = reference("feedback_form_id", FormTemplatesTable).nullable()
+    // todo: Needs discussion
     val enrollmentType = enum("enrollment_type", SubjectEnrollmentType::class)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
 
+object SubjectGradesTable : UUIDTable("subject_grades"), LoggedTable, DeletableTable {
+    val gradeId = reference("grade_id", GradesTable)
+    val subjectId = reference("subject_id", SubjectsTable)
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+// todo: Check access levels and roles, is it needed?
 object SubjectAdminsTable : UUIDTable("subject_admins"), LoggedTable, DeletableTable {
     val subjectId = reference("subject_id", SubjectsTable)
     val clientId = reference("client_id", StaffTable)

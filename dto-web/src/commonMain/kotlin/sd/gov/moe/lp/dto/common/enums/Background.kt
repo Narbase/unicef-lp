@@ -12,9 +12,13 @@ import sd.gov.moe.lp.dto.common.EnumDtoName
  * On: 7/29/21.
  */
 
-enum class Background(override val dtoName: String, override val persistenceName: String): EnumDtoName, EnumPersistenceName {
-    Refugee("Refugee", "Refugee"),
-    Host("Host", "Host"),
-    IDPs("IDPs", "IDPs"),
-    Other("Other", "Other"),
+enum class Background(persistenceName: String? = null, dtoName: String? = null): EnumDtoName, EnumPersistenceName {
+    Refugee,
+    Host,
+    IDPs,
+    Other,
+    ;
+
+    override val dtoName: String = dtoName ?: name
+    override val persistenceName: String = persistenceName ?: name
 }

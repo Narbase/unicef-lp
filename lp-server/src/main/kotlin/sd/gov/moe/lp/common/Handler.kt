@@ -3,11 +3,16 @@ package sd.gov.moe.lp.common
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.narbase.oss.dto.common.entries.AnswerDto
+import com.narbase.oss.dto.common.entries.EntryDto
+import com.narbase.oss.dto.common.entries.answerDtoToTypeMap
+import com.narbase.oss.dto.common.entries.entryDtoToTypeMap
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.plugins.*
 import io.ktor.server.response.*
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
+import sd.gov.moe.lp.util.RuntimeTypeAdapterFactory
 import kotlin.reflect.KClass
 
 /*
@@ -53,6 +58,10 @@ abstract class Handler<V : Any, out D : Any>(
     }
 
     companion object {
+        private val entryTypeAdapterFactory = RuntimeTypeAdapterFactory.of(EntryDto::class.java, "type", true)
+            .apply { entryDtoToTypeMap.forEach { this.registerSubtype(it.key.java, it.value) } }
+        private val answerTypeAdapterFactory = RuntimeTypeAdapterFactory.of(AnswerDto::class.java, "type", true)
+            .apply { answerDtoToTypeMap.forEach { this.registerSubtype(it.key.java, it.value) } }
 
         val gson = GsonBuilder()
             .registerAdapters()
@@ -60,7 +69,8 @@ abstract class Handler<V : Any, out D : Any>(
 
 
         fun GsonBuilder.registerAdapters() = this
-//                .registerTypeAdapterFactory(practiceSettings)
+            .registerTypeAdapterFactory(entryTypeAdapterFactory)
+            .registerTypeAdapterFactory(answerTypeAdapterFactory)
     }
 
 

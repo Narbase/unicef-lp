@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.data.tables
 
+import com.narbase.oss.dto.common.forms.AnswersListDto
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.jodatime.date
 import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
@@ -89,7 +90,7 @@ object StudentGradedAssessmentsTable : UUIDTable("student_graded_assessments"), 
     val studentId = reference("student_id", StudentsTable)
     val lessonId = reference("lesson_id", GradedAssessmentsTable)
     val progress = double("progress")
-    val answers = jsonColumn<String>("answers")
+    val answers = jsonColumn<AnswersListDto>("answers")
     val attempts = integer("attempts")
 
     // constraint: student and lesson are unique
@@ -101,7 +102,7 @@ object StudentNonGradedAssessmentsTable : UUIDTable("student_non_graded_assessme
     val studentId = reference("student_id", StudentsTable)
     val lessonId = reference("lesson_id", NonGradedAssessmentsTable)
     val progress = double("progress")
-    val answers = jsonColumn<String>("answers")
+    val answers = jsonColumn<AnswersListDto>("answers")
 
     // constraint: student and lesson are unique
     override val isDeleted = deletedColumn()
@@ -160,7 +161,7 @@ object StudentActivityLogTable : UUIDTable("student_activity_log"), LoggedTable 
     val activityType = enum("activity_type", ActivityType::class)
     val lessonId = reference("lesson_id", LessonsTable).nullable()
     val score = double("score").nullable()
-    val answers = jsonColumn<String>("answers").nullable() // Answers
+    val answers = jsonColumn<AnswersListDto>("answers").nullable() // Answers
     val attempts = integer("attempts").nullable()
     val startTime = dateTimeWithoutTimezone("start_time")
     val endTime = dateTimeWithoutTimezone("end_time")

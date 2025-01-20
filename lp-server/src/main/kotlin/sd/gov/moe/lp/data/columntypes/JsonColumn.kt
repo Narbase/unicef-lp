@@ -3,12 +3,17 @@ package sd.gov.moe.lp.data.columntypes
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.narbase.oss.dto.common.entries.AnswerDto
+import com.narbase.oss.dto.common.entries.EntryDto
+import com.narbase.oss.dto.common.entries.answerDtoToTypeMap
+import com.narbase.oss.dto.common.entries.entryDtoToTypeMap
 import sd.gov.moe.lp.core.MultiLingualText
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.postgresql.util.PGobject
+import sd.gov.moe.lp.util.RuntimeTypeAdapterFactory
 import java.lang.reflect.Type
 
 /*
@@ -61,8 +66,20 @@ inline fun <reified T : Any> Table.jsonColumn(name: String): Column<T> = registe
 
 fun createGson(): Gson {
 
+    val entryFactory = RuntimeTypeAdapterFactory
+        .of(EntryDto::class.java, "type", true)
+        .apply {
+            entryDtoToTypeMap.forEach { registerSubtype(it.key.java, it.value) }
+        }
+    val answerFactory = RuntimeTypeAdapterFactory
+        .of(AnswerDto::class.java, "type", true)
+        .apply {
+            answerDtoToTypeMap.forEach { registerSubtype(it.key.java, it.value) }
+        }
+
     return GsonBuilder()
-//            .registerTypeAdapterFactory(entryFactory)
+        .registerTypeAdapterFactory(entryFactory)
+        .registerTypeAdapterFactory(answerFactory)
         .create()
 }
 

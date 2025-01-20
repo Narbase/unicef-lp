@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.data.tables
 
+import com.narbase.oss.dto.common.forms.EntryListDto
 import org.jetbrains.exposed.dao.id.UUIDTable
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
@@ -59,14 +60,14 @@ object StandardLessonsTable : UUIDTable("standard_lessons"), LoggedTable, Deleta
 
 object NonGradedAssessmentsTable : UUIDTable("non_graded_assessments"), LoggedTable, DeletableTable {
     val lessonId = reference("lesson_id", LessonsTable)
-    val form = jsonColumn<String>("form") // Entries
+    val form = jsonColumn<EntryListDto>("form") // Entries
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
 
 object GradedAssessmentsTable : UUIDTable("graded_assessments"), LoggedTable, DeletableTable {
     val lessonId = reference("lesson_id", LessonsTable)
-    val form = jsonColumn<String>("form") // Entries
+    val form = jsonColumn<EntryListDto>("form") // Entries
     val areQuestionsShuffled = bool("are_questions_shuffled")
     val maximumAllowedAttempts = integer("maximum_allowed_attempts")
     val areAnswersShown = bool("are_answers_shown")

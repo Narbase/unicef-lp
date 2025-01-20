@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS grades (
  CONSTRAINT fk_lessons_subject_id__id FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE RESTRICT ON UPDATE RESTRICT
   );
 
- CREATE TABLE IF NOT EXISTS student_lessons (
+ CREATE TABLE IF NOT EXISTS student_standard_lessons (
  id INTEGER PRIMARY KEY,
  student_id INTEGER NOT NULL,
  lesson_id INTEGER NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS grades (
  CONSTRAINT fk_student_lessons_lesson_id__id FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE RESTRICT ON UPDATE RESTRICT
  );
 
- CREATE TABLE IF NOT EXISTS student_assessments (
+ CREATE TABLE IF NOT EXISTS student_graded_assessments (
  id INTEGER PRIMARY KEY,
  student_id INTEGER NOT NULL,
  lesson_id INTEGER NOT NULL,
@@ -99,7 +99,19 @@ CREATE TABLE IF NOT EXISTS grades (
  is_deleted INTEGER DEFAULT 0 NOT NULL,
  created_on TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
  CONSTRAINT fk_student_assessments_student_id__id FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
- CONSTRAINT fk_student_assessments_lesson_id__id FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE RESTRICT ON UPDATE RESTRICT
+ CONSTRAINT fk_student_assessments_lesson_id__id FOREIGN KEY (lesson_id) REFERENCES graded_assessments(id) ON DELETE RESTRICT ON UPDATE RESTRICT
+ );
+
+ CREATE TABLE IF NOT EXISTS student_non_graded_assessments (
+ id INTEGER PRIMARY KEY,
+ student_id INTEGER NOT NULL,
+ lesson_id INTEGER NOT NULL,
+ progress REAL NOT NULL,
+ answers BLOB NOT NULL,
+ is_deleted INTEGER DEFAULT 0 NOT NULL,
+ created_on TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
+ CONSTRAINT fk_student_assessments_student_id__id FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE RESTRICT ON UPDATE RESTRICT,
+ CONSTRAINT fk_student_assessments_lesson_id__id FOREIGN KEY (lesson_id) REFERENCES non_graded_assessments(id) ON DELETE RESTRICT ON UPDATE RESTRICT
  );
 
  CREATE TABLE IF NOT EXISTS student_subjects (

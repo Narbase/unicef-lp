@@ -2,13 +2,10 @@ package sd.gov.moe.lp.data.tables
 
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.jodatime.date
-import org.jetbrains.exposed.sql.jodatime.datetime
-import org.joda.time.DateTime
 import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
-import sd.gov.moe.lp.data.tables.StudentLessonsTable.nullable
 import sd.gov.moe.lp.dto.common.enums.ActivityType
 import sd.gov.moe.lp.dto.common.enums.Background
 import sd.gov.moe.lp.dto.common.enums.Gender
@@ -78,9 +75,9 @@ object StudentsImportFilesTable : UUIDTable("students_import_files"), LoggedTabl
     override val createdOn = createdOnColumn()
 }
 
-object StudentLessonsTable : UUIDTable("student_lessons"), LoggedTable, DeletableTable {
+object StudentStandardLessonsTable : UUIDTable("student_standard_lessons"), LoggedTable, DeletableTable {
     val studentId = reference("student_id", StudentsTable)
-    val lessonId = reference("lesson_id", LessonsTable)
+    val lessonId = reference("lesson_id", StandardLessonsTable)
     val isCompleted = bool("is_completed")
 
     // constraint: student and lesson are unique
@@ -88,12 +85,23 @@ object StudentLessonsTable : UUIDTable("student_lessons"), LoggedTable, Deletabl
     override val createdOn = createdOnColumn()
 }
 
-object StudentAssessmentsTable : UUIDTable("student_assessments"), LoggedTable, DeletableTable {
+object StudentGradedAssessmentsTable : UUIDTable("student_graded_assessments"), LoggedTable, DeletableTable {
     val studentId = reference("student_id", StudentsTable)
-    val lessonId = reference("lesson_id", LessonsTable)
+    val lessonId = reference("lesson_id", GradedAssessmentsTable)
     val progress = double("progress")
     val answers = jsonColumn<String>("answers")
-    val attempts = integer("attempts").nullable()
+    val attempts = integer("attempts")
+
+    // constraint: student and lesson are unique
+    override val isDeleted = deletedColumn()
+    override val createdOn = createdOnColumn()
+}
+
+object StudentNonGradedAssessmentsTable : UUIDTable("student_non_graded_assessments"), LoggedTable, DeletableTable {
+    val studentId = reference("student_id", StudentsTable)
+    val lessonId = reference("lesson_id", NonGradedAssessmentsTable)
+    val progress = double("progress")
+    val answers = jsonColumn<String>("answers")
 
     // constraint: student and lesson are unique
     override val isDeleted = deletedColumn()
@@ -103,7 +111,8 @@ object StudentAssessmentsTable : UUIDTable("student_assessments"), LoggedTable, 
 object StudentSubjectsTable : UUIDTable("student_subjects"), LoggedTable, DeletableTable {
     val studentId = reference("student_id", StudentsTable)
     val subjectId = reference("subject_id", SubjectsTable)
-//    val progress = double("progress")
+
+    //    val progress = double("progress")
     val completedOn = dateTimeWithoutTimezone("completed_on").nullable()
     val certificate = text("certificate").nullable()
 

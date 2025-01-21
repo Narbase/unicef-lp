@@ -10,8 +10,8 @@ import sd.gov.moe.lp.admin.utils.string.splitCamelCase
 val Privilege.displayName: String
     get() {
         return when (this) {
-            Privilege.BasicUser -> "Basic User"
-            Privilege.UsersManagement -> "Users Management"
+//            Privilege.BasicUser -> "Basic User"
+//            Privilege.UsersManagement -> "Users Management"
             else -> name.splitCamelCase()
         }
     }

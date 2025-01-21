@@ -1,16 +1,14 @@
 package sd.gov.moe.lp.data.tables
 
 import com.narbase.oss.dto.common.forms.AnswersListDto
-import kotlinx.serialization.json.JsonElement
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.jodatime.date
 import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
+import sd.gov.moe.lp.data.models.StudentActivityData
 import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
-import sd.gov.moe.lp.data.tables.ClientsTable.index
 import sd.gov.moe.lp.dto.common.enums.ActivityType
 import sd.gov.moe.lp.dto.common.enums.Background
 import sd.gov.moe.lp.dto.common.enums.Gender
@@ -28,7 +26,7 @@ object StudentsTable : UUIDTable("students"), LoggedTable, DeletableTableWithReq
     val schoolName = text("school_name").nullable()
     val callingCode = text("calling_code").nullable() // with leading +
     val localPhone = text("local_phone").nullable() // without leading zero
-    val profilePictureId = reference("profile_picture_id", UploadedFilesTable).nullable()
+    val profilePictureId = reference("profile_picture_id", FilesTable).nullable()
     val gradeId = reference("grade_id", GradesTable)
 
     override val isDeleted = deletedColumn()
@@ -69,7 +67,7 @@ object StudentStatusLogTable : UUIDTable("student_status_log"), LoggedTable {
 }
 
 object StudentsImportFilesTable : UUIDTable("students_import_files"), LoggedTable {
-    val fileId = reference("file_id", UploadedFilesTable)
+    val fileId = reference("file_id", FilesTable)
     val groupId = reference("group_id", GroupsTable)
     val uploadedBy = reference("uploaded_by", StaffTable)
     val uploadedOn = dateTimeWithoutTimezone("uploaded_on")
@@ -139,43 +137,11 @@ object StudentNonGradedAssessmentsTable : UUIDTable("student_non_graded_assessme
     override val createdOn = createdOnColumn()
 }
 
-/*
-object StudentGroupsTable : UUIDTable("student_groups"), LoggedTable, DeletableTable {
-    val studentId = reference("student_id", StudentsTable)
-    val groupId = reference("group_id", GroupsTable)
-
-    // constraint: student and lesson are unique
-
-
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
-
-object StudentLearningPathsTable : UUIDTable("student_learning_paths"), LoggedTable, DeletableTable {
-    val studentId = reference("student_id", StudentsTable)
-    val pathId = reference("path_id", LearningPathsTable)
-    val progress = double("progress")
-
-    // constraint: student and lesson are unique
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
-
- */
-
 object StudentActivityLogTable : UUIDTable("student_activity_log"), LoggedTable {
     val studentId = reference("student_id", StudentsTable)
     val gradeId = reference("grade_id", GradesTable)
     val activityType = enum("activity_type", ActivityType::class)
-    val data = jsonColumn<String>("data")
-
-    /*
-    val lessonId = reference("lesson_id", LessonsTable).nullable()
-    val score = double("score").nullable()
-    val answers = jsonColumn<AnswersListDto>("answers").nullable() // Answers
-    val attempts = integer("attempts").nullable()
-
-     */
+    val data = jsonColumn<StudentActivityData>("data").nullable()
     val startTime = dateTimeWithoutTimezone("start_time")
     val endTime = dateTimeWithoutTimezone("end_time")
     override val createdOn = createdOnColumn()

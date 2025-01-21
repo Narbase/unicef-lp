@@ -4,13 +4,12 @@ import com.narbase.oss.dto.common.forms.EntryListDto
 import org.jetbrains.exposed.dao.id.UUIDTable
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
-import sd.gov.moe.lp.data.tables.GradesTable.nullable
 import sd.gov.moe.lp.dto.common.enums.LessonType
 import sd.gov.moe.lp.dto.common.enums.SubjectEnrollmentType
 
 object GradesTable : UUIDTable("grades"), LoggedTable, DeletableTable {
     val name = text("name")
-    val thumbnailId = reference("thumbnail_id", UploadedFilesTable).nullable()
+    val thumbnailId = reference("thumbnail_id", FilesTable).nullable()
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -26,7 +25,7 @@ object GradeAdminsTable : UUIDTable("grade_admins"), LoggedTable, DeletableTable
 object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
     val name = text("name")
     val description = text("description").nullable()
-    val thumbnailId = reference("thumbnail_id", UploadedFilesTable).nullable()
+    val thumbnailId = reference("thumbnail_id", FilesTable).nullable()
     val hasCertificate = bool("has_certificate")
     // todo: clarify certificates handling (templates, editable, etc...)
 //    val certificate = reference("certificate", UploadedFilesTable).nullable() // svg, html
@@ -66,7 +65,7 @@ object LessonsTable : UUIDTable("lessons"), LoggedTable, DeletableTable {
 
 object StandardLessonsTable : UUIDTable("standard_lessons"), LoggedTable, DeletableTable {
     val lessonId = reference("lesson_id", LessonsTable)
-    val fileId = reference("file_id", UploadedFilesTable)
+    val fileId = reference("file_id", FilesTable)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }

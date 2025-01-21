@@ -1,15 +1,11 @@
 package sd.gov.moe.lp.data.tables
 
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.jodatime.date
-import org.jetbrains.exposed.sql.jodatime.datetime
-import org.joda.time.DateTime
 import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.GroupMonitoringStats
 import sd.gov.moe.lp.dto.common.enums.Education
-import sd.gov.moe.lp.dto.common.enums.Gender
 
 object CountriesTable : UUIDTable("countries"), LoggedTable {
     val name = text("name")
@@ -50,9 +46,8 @@ object GroupsTable : UUIDTable("teachers"), LoggedTable, DeletableTableWithReque
     val centerId = reference("center_id", CentersTable)
     val teacherId = reference("teacher_id", TeachersTable)
 
-    // todo: dates already exist for the student? Why date time?
-    val startDate = date("start_date")
-    val endDate = date("end_date")
+    val startDate = dateWithoutTimezone("start_date")
+    val endDate = dateWithoutTimezone("end_date")
     val education = enum("education", Education::class)
     val partnerId = reference("partner_id", PartnersTable)
     override val isDeleted = deletedColumn()
@@ -81,36 +76,3 @@ object GroupAdminsTable : UUIDTable("group_admins"), LoggedTable, DeletableTable
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
-/*
-object LearningPathsTable : UUIDTable("learning_paths"), LoggedTable, DeletableTable {
-    val name = text("name")
-    val description = text("description").nullable()
-    val thumbnailUrl = text("thumbnail_url").nullable()
-    val hasCertificate = bool("has_certificate")
-    val isOrderingRestricted = bool("is_ordering_restricted")
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
-
-object AutomaticLearningPathsTable : UUIDTable("automatic_learning_paths"), LoggedTable, DeletableTable {
-    val pathId = reference("path_id", LearningPathsTable)
-    val gradeId = reference("grade_id", GradesTable)
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
-
-object LearningPathAdminsTable : UUIDTable("learning_path_admins"), LoggedTable, DeletableTable {
-    val pathId = reference("path_id", LearningPathsTable)
-    val clientId = reference("client_id", ClientsTable)
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
-
-object LearningPathSubjectsTable : UUIDTable("learning_path_subjects"), LoggedTable, DeletableTable {
-    val pathId = reference("path_id", LearningPathsTable)
-    val subjectId = reference("subject_id", SubjectsTable)
-    val order = integer("order")
-    override val isDeleted = deletedColumn()
-    override val createdOn = createdOnColumn()
-}
-*/

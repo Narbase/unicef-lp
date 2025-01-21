@@ -4,18 +4,20 @@ import java.util.UUID
 
 
 class StudentMonitoringStats(
-    val list: Array<GradeInfo>
+    val list: Array<SubjectInfo>
 ) {
-    class GradeInfo(
+    class SubjectInfo(
         val grade: UUID,
-        val lessonTries: Int,
-        val startLesson: Int,
-        val currentLesson: Int,
+        val subject: UUID,
+        val startLesson: UUID,
+        val currentLesson: UUID,
         val daysPlayed: Int,
         val lastPlayed: Long?,
         val devices: Long,
+        val assessmentsTries: Int,
         val assessmentsPassed: Long,
         val assessmentsFailed: Long,
+        val assessmentsScore: Double,
         val minutesPlayed: Double,
     )
 

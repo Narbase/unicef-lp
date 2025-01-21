@@ -34,7 +34,7 @@ object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
 //    val hasFeedbackForm = bool("has_feedback_form")
     val feedbackFormId = reference("feedback_form_id", FormTemplatesTable).nullable()
     // todo: Needs discussion
-    val enrollmentType = enum("enrollment_type", SubjectEnrollmentType::class)
+//    val enrollmentType = enum("enrollment_type", SubjectEnrollmentType::class)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
@@ -42,6 +42,7 @@ object SubjectsTable : UUIDTable("subjects"), LoggedTable, DeletableTable {
 object SubjectGradesTable : UUIDTable("subject_grades"), LoggedTable, DeletableTable {
     val gradeId = reference("grade_id", GradesTable)
     val subjectId = reference("subject_id", SubjectsTable)
+    val enrollmentType = enum("enrollment_type", SubjectEnrollmentType::class)
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }

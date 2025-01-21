@@ -5,6 +5,7 @@ import java.util.UUID
 
 class GroupMonitoringStats(
     val grades: List<UUID>,
+    val subjects: List<UUID>,
     val daysPlayed: Int,
     val lastPlayed: Long?,
     val lastUpload: Long?,
@@ -15,6 +16,7 @@ class GroupMonitoringStats(
 ) {
     companion object {
         fun emptyStats() = GroupMonitoringStats(
+            listOf(),
             listOf(),
             0,
             null,

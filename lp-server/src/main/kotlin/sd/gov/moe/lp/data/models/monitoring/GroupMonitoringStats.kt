@@ -1,11 +1,12 @@
 package sd.gov.moe.lp.data.models.monitoring
 
+import sd.gov.moe.lp.dto.common.StringUUID
 import java.util.UUID
 
 
 class GroupMonitoringStats(
-    val grades: List<UUID>,
-    val subjects: List<UUID>,
+    val grades: List<StringUUID>,
+    val subjects: List<StringUUID>,
     val daysPlayed: Int,
     val lastPlayed: Long?,
     val lastUpload: Long?,

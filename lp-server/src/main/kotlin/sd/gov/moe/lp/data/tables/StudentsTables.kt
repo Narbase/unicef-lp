@@ -7,15 +7,13 @@ import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
-import sd.gov.moe.lp.data.models.StudentActivityData
 import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
-import sd.gov.moe.lp.dto.common.enums.ActivityType
 import sd.gov.moe.lp.dto.common.enums.Background
 import sd.gov.moe.lp.dto.common.enums.Gender
 import sd.gov.moe.lp.dto.common.enums.StudentStatus
 
 object StudentsTable : UUIDTable("students"), LoggedTable, DeletableTableWithRequest {
-    val username: Column<String> = text("username")
+    val username: Column<String> = text("username") // unique for the whole system by using the device identifier
     val passwordHash: Column<String> = text("password_hash")
 
     val fullName = text("full_name")

@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.data.models.monitoring
 
+import sd.gov.moe.lp.dto.common.StringUUID
 import java.util.UUID
 
 
@@ -7,10 +8,10 @@ class StudentMonitoringStats(
     val list: Array<SubjectInfo>
 ) {
     class SubjectInfo(
-        val grade: UUID,
-        val subject: UUID,
-        val startLesson: UUID,
-        val currentLesson: UUID,
+        val grade: StringUUID,
+        val subject: StringUUID,
+        val startLesson: StringUUID,
+        val currentLesson: StringUUID,
         val daysPlayed: Int,
         val lastPlayed: Long?,
         val devices: Long,

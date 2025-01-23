@@ -49,15 +49,6 @@ object StudentControlsTable : UUIDTable("student_controls"), LoggedTable, Deleta
     override val isDeleted = deletedColumn()
 }
 
-object StudentsMonitoringTable : UUIDTable("students_monitoring"), LoggedTable {
-    val studentId = reference("student_id", StudentsTable)
-    val stats = jsonColumn<StudentMonitoringStats>("stats")
-    override val createdOn = createdOnColumn()
-
-    // todo: confirm change from clientDefault { DateTime() } to dateTimeWithoutTimezone("updated_on").defaultExpression(CurrentDateTimeAtUtc())
-    val updatedOn = updatedOnColumn()
-}
-
 object StudentStatusLogTable : UUIDTable("student_status_log"), LoggedTable {
     val reason = text("reason")
     val studentId = reference("student_id", StudentsTable)

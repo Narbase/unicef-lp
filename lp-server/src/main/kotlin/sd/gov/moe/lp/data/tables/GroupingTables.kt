@@ -52,13 +52,6 @@ object GroupsTable : UUIDTable("teachers"), LoggedTable, DeletableTableWithReque
     override val createdOn = createdOnColumn()
 }
 
-object GroupsMonitoringTable : UUIDTable("groups_monitoring"), LoggedTable {
-    val groupId = reference("group_id", GroupsTable)
-    val stats = jsonColumn<GroupMonitoringStats>("stats")
-    override val createdOn = createdOnColumn()
-    val updatedOn = updatedOnColumn()
-}
-
 // From online LP
 object AutomaticGroupsTable : UUIDTable("automatic_groups"), LoggedTable, DeletableTable {
     val groupId = reference("group_id", GroupsTable)

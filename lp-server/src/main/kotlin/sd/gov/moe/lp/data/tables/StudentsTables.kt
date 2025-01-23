@@ -136,13 +136,3 @@ object StudentNonGradedAssessmentsTable : UUIDTable("student_non_graded_assessme
     override val isDeleted = deletedColumn()
     override val createdOn = createdOnColumn()
 }
-
-object StudentActivityLogTable : UUIDTable("student_activity_log"), LoggedTable {
-    val studentId = reference("student_id", StudentsTable)
-    val gradeId = reference("grade_id", GradesTable)
-    val activityType = enum("activity_type", ActivityType::class)
-    val data = jsonColumn<StudentActivityData>("data").nullable()
-    val startTime = dateTimeWithoutTimezone("start_time")
-    val endTime = dateTimeWithoutTimezone("end_time")
-    override val createdOn = createdOnColumn()
-}

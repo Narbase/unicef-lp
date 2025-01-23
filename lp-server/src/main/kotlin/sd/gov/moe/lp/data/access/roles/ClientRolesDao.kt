@@ -1,6 +1,5 @@
 package sd.gov.moe.lp.data.access.roles
 
-import sd.gov.moe.lp.data.models.roles.Role
 import sd.gov.moe.lp.data.tables.ClientsTable
 import sd.gov.moe.lp.data.tables.roles.ClientsRolesTable
 import sd.gov.moe.lp.data.tables.roles.RolesTable

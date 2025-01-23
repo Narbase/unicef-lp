@@ -1,11 +1,11 @@
 package sd.gov.moe.lp.main.provisioning
 
 import sd.gov.moe.lp.data.access.clients.ClientsDao
-import sd.gov.moe.lp.data.access.roles.RolesDao
 import sd.gov.moe.lp.data.access.users.UsersRepository
 import sd.gov.moe.lp.deployment.FirstRunConfig
 import sd.gov.moe.lp.dto.models.roles.Privilege
 import org.jetbrains.exposed.sql.transactions.transaction
+import sd.gov.moe.lp.data.access.roles.RolesDao
 import sd.gov.moe.lp.dto.common.enums.Country
 
 /*

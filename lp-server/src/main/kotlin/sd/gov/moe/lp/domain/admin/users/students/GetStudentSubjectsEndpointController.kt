@@ -11,10 +11,10 @@ import sd.gov.moe.lp.dto.common.kmmLongOf
 import sd.gov.moe.lp.dto.common.toStringUUID
 import sd.gov.moe.lp.dto.common.utils.ListAndTotalDto
 import sd.gov.moe.lp.dto.domain.admin.GetStudentSubjectsEndpoint
+import sd.gov.moe.lp.dto.domain.studentgradedassessments.StudentGradedAssessmentDto
+import sd.gov.moe.lp.dto.domain.studentsubjects.StudentSubjectDto
+import sd.gov.moe.lp.dto.domain.subjects.SubjectDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentSubjectDto
-import sd.gov.moe.lp.dto.models.StudentAssessmentDto
-import sd.gov.moe.lp.dto.models.StudentSubjectDto
-import sd.gov.moe.lp.dto.models.SubjectDto
 import java.util.*
 
 
@@ -43,11 +43,13 @@ val studentSubjects = arrayOf(
     ExtendedStudentSubjectDto(
         subject = SubjectDto(
             id = UUID.randomUUID().toStringUUID(),
-            gradeId = gradesList.random().id!!,
             name = "s1",
             description = "no",
-            thumbnailUrl = null,
-            hasCertificate = true
+            thumbnailId = null,
+            hasCertificate = true,
+            isLessonsOrderRestrictive = false,
+            feedbackFormId = null,
+            createdOn = null
         ),
         studentSubject = StudentSubjectDto(
             id = UUID.randomUUID().toStringUUID(),
@@ -55,65 +57,12 @@ val studentSubjects = arrayOf(
             subjectId = UUID.randomUUID().toStringUUID(),
             progress = 39.0,
             completedOn = null,
-            enrolledOn = DateTime.now().minusDays(852).toDto(),
+            createdOn = DateTime.now().minusDays(852).toDto(),
+            hasCertificate = false,
+            feedback = null,
         ),
         studentSubjectAssessments = arrayOf(
-            StudentAssessmentDto(
-                id = UUID.randomUUID().toStringUUID(),
-                studentId = studentsList.random().student.id!!,
-                assessmentId = UUID.randomUUID().toStringUUID(),
-                progress = 100.0,
-            ),
-            StudentAssessmentDto(
-                id = UUID.randomUUID().toStringUUID(),
-                studentId = studentsList.random().student.id!!,
-                assessmentId = UUID.randomUUID().toStringUUID(),
-                progress = 40.0,
-            ),
-            StudentAssessmentDto(
-                id = UUID.randomUUID().toStringUUID(),
-                studentId = studentsList.random().student.id!!,
-                assessmentId = UUID.randomUUID().toStringUUID(),
-                progress = 0.0,
-            ),
+
         )
     ),
-    ExtendedStudentSubjectDto(
-        subject = SubjectDto(
-            id = UUID.randomUUID().toStringUUID(),
-            gradeId = gradesList.random().id!!,
-            name = "s2",
-            description = null,
-            thumbnailUrl = null,
-            hasCertificate = false
-        ),
-        studentSubject = StudentSubjectDto(
-            id = UUID.randomUUID().toStringUUID(),
-            studentId = studentsList.random().student.id!!,
-            subjectId = UUID.randomUUID().toStringUUID(),
-            progress = 100.0,
-            completedOn = null,
-            enrolledOn = DateTime.now().minusDays(852).toDto(),
-        ),
-        studentSubjectAssessments = arrayOf(
-            StudentAssessmentDto(
-                id = UUID.randomUUID().toStringUUID(),
-                studentId = studentsList.random().student.id!!,
-                assessmentId = UUID.randomUUID().toStringUUID(),
-                progress = 50.0,
-            ),
-            StudentAssessmentDto(
-                id = UUID.randomUUID().toStringUUID(),
-                studentId = studentsList.random().student.id!!,
-                assessmentId = UUID.randomUUID().toStringUUID(),
-                progress = 40.0,
-            ),
-            StudentAssessmentDto(
-                id = UUID.randomUUID().toStringUUID(),
-                studentId = studentsList.random().student.id!!,
-                assessmentId = UUID.randomUUID().toStringUUID(),
-                progress = 0.0,
-            ),
-        )
-    )
 )

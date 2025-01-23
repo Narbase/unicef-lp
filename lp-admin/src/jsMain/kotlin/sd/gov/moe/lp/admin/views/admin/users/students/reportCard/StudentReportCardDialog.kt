@@ -20,10 +20,8 @@ import sd.gov.moe.lp.admin.utils.views.pointerCursor
 import sd.gov.moe.lp.admin.utils.views.popUpDialog
 import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 import sd.gov.moe.lp.admin.utils.views.withLoadingAndError
-import sd.gov.moe.lp.admin.views.admin.content.learningPaths.LearningPathsManagementViewModel
 import sd.gov.moe.lp.admin.views.admin.users.groups.GroupsManagementViewModel
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.GroupsTableComponent
-import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.LearningPathsTableComponent
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.StudentSubjectsTableComponent
 import sd.gov.moe.lp.admin.views.admin.users.students.reportCard.tables.StudentSubjectsTableViewModel
 import sd.gov.moe.lp.dto.common.StringUUID
@@ -35,14 +33,12 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
 
     //    private var paginationControls: PaginationControls? = null
     private var tableBody: View? = null
-    private val learningPathsManagementViewModel = LearningPathsManagementViewModel()
     private val groupsManagementViewModel = GroupsManagementViewModel()
     private val studentSubjectsTableViewModel = StudentSubjectsTableViewModel()
 
     enum class ReportTabs(val title: String) {
         Subjects("Enrolled subjects".localized()),
         Groups("Enrolled groups".localized()),
-        Paths("Learning paths".localized())
     }
 
     private val tabsToViews = mutableMapOf<ReportTabs, View>()
@@ -105,7 +101,7 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                     }
                     verticalFiller(adminTheme.standardSpacing)
                     textView {
-                        text = reportCard.studentProfile.client.userName
+                        text = reportCard.studentProfile.client.username
                     }
                 }
                 horizontalFiller()
@@ -245,16 +241,6 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                         }
                         element.src = AppImages.USER_ICON
                     }
-                    horizontalFiller(adminTheme.standardSpacing)
-                    verticalLayout {
-                        textView {
-                            text = reportCard.studentLearningPathsCount.toString()
-                        }
-                        verticalFiller(adminTheme.standardSpacing)
-                        textView {
-                            text = "Enrolled learning paths".localized()
-                        }
-                    }
                 }
 
             }
@@ -301,7 +287,6 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
                     mount(GroupsTableComponent(groupsManagementViewModel))
                 }
 
-                ReportTabs.Paths -> mount(LearningPathsTableComponent(learningPathsManagementViewModel))
             }
         }
 
@@ -311,7 +296,6 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
         val count = when (tab) {
             ReportTabs.Subjects -> viewModel.reportCard?.studentSubjects?.size
             ReportTabs.Groups -> viewModel.reportCard?.studentGroupsCount
-            ReportTabs.Paths -> viewModel.reportCard?.studentLearningPathsCount
         }
         style {
             padding = "4px 12px".dimen()
@@ -340,7 +324,6 @@ class StudentReportCardDialog(val viewModel: StudentReportCardViewModel) : Compo
         viewModel.setStudentId(id)
         viewModel.getReportUiState.clearObservers()
         viewModel.getReportCard()
-        learningPathsManagementViewModel.filters.studentId = id
         groupsManagementViewModel.filters.studentId = id
         studentSubjectsTableViewModel.setStudentId(id)
         viewModel.getReportUiState.observe {

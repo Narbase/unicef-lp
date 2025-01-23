@@ -6,12 +6,12 @@ import com.narbase.kunafa.core.css.*
 import com.narbase.kunafa.core.dimensions.dependent.matchParent
 import com.narbase.kunafa.core.dimensions.dependent.wrapContent
 import com.narbase.kunafa.core.dimensions.px
-import sd.gov.moe.lp.dto.models.GroupDto
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.dialog.validateAndGetText
 import sd.gov.moe.lp.admin.utils.views.popUpDialog
 import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 import sd.gov.moe.lp.admin.utils.views.withLoadingAndError
+import sd.gov.moe.lp.dto.domain.groups.GroupDto
 
 class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() {
     private var popUp = popUpDialog { }
@@ -75,15 +75,15 @@ class UpsertGroupDialog(val viewModel: GroupsManagementViewModel) : Component() 
         errorTextView?.isVisible = isDataValid.not()
         if (isDataValid.not()) return
 
-        val dto = GroupDto(
-            groupDto?.id,
-            groupName ?: return,
-        )
-        if (groupDto == null) {
-            viewModel.addGroup(dto)
-        } else {
-            viewModel.editGroup(dto)
-        }
+//        val dto = GroupDto(
+//            groupDto?.id,
+//            groupName ?: return,
+//        )
+//        if (groupDto == null) {
+//            viewModel.addGroup(dto)
+//        } else {
+//            viewModel.editGroup(dto)
+//        }
 
     }
 

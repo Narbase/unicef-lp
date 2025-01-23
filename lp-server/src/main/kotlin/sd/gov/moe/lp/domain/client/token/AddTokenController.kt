@@ -23,7 +23,8 @@ class AddTokenController : Handler<RequestDto, ResponseDto>(RequestDto::class) {
             removeClientToken(client, requestDto.token)
             DeviceTokensTable.insert {
                 it[token] = requestDto.token
-                it[clientId] = client.id.toEntityId(ClientsTable)
+                it[clientId] =
+                    client.id?.toEntityId(ClientsTable) ?: throw IllegalArgumentException("client id cannot be null")
                 it[createdOn] = DateTime()
             }
         }

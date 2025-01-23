@@ -1,7 +1,7 @@
 package sd.gov.moe.lp.data.conversions.clients
 
 import sd.gov.moe.lp.common.toUUID
-import sd.gov.moe.lp.data.models.clients.Client
+import sd.gov.moe.lp.data.access.clients.Client
 import sd.gov.moe.lp.domain.utils.toDateTime
 import sd.gov.moe.lp.domain.utils.toDto
 import sd.gov.moe.lp.dto.common.toStringUUID

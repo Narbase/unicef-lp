@@ -3,7 +3,7 @@ package sd.gov.moe.lp.domain.utils
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
 import sd.gov.moe.lp.common.exceptions.InvalidRequestException
 import sd.gov.moe.lp.data.access.clients.ClientsDao
-import sd.gov.moe.lp.data.models.clients.Client
+import sd.gov.moe.lp.data.access.clients.Client
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SqlExpressionBuilder
 import org.jetbrains.exposed.sql.Table

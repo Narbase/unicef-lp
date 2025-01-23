@@ -72,7 +72,7 @@ class StudentsManagementComponent : Component() {
                             }
                         }
                     }
-                    tableCell(item.client.userName, 3, 16.px)
+                    tableCell(item.client.username, 3, 16.px)
                     tableCell(item.student.grade.name, 3, 16.px)
                     onClick = {
                         upsertDialog.edit(item)

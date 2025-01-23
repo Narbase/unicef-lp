@@ -1,6 +1,7 @@
 package sd.gov.moe.lp.dto.models
 
 import sd.gov.moe.lp.dto.common.StringUUID
+import sd.gov.moe.lp.dto.domain.grades.GradeDto
 import kotlin.js.JsExport
 
 @Deprecated("replace with narrator")

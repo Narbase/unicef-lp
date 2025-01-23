@@ -12,6 +12,7 @@ import sd.gov.moe.lp.data.models.utils.ListAndTotal
 import sd.gov.moe.lp.domain.user.crud.CrudController
 import sd.gov.moe.lp.dto.domain.usersmanagement.UsersCrudDto
 import org.jetbrains.exposed.sql.transactions.transaction
+import sd.gov.moe.lp.common.toUUID
 import java.util.*
 
 /*
@@ -45,7 +46,7 @@ class UsersCrudController : CrudController<UsersCrudDto.User, UsersCrudDto.Filte
             item.password,
             item.fullName,
             item.country,
-            item.dynamicRoles.mapNotNull { it.id?.toModel() }
+            item.dynamicRoles.mapNotNull { it.id?.toUUID() }
         )
 
         val user = UsersRepository.get(userId)
@@ -64,7 +65,7 @@ class UsersCrudController : CrudController<UsersCrudDto.User, UsersCrudDto.Filte
                 item.password.takeUnless { it.isBlank() },
                 item.fullName,
                 item.country,
-                item.dynamicRoles.mapNotNull { it.id?.toModel() }
+                item.dynamicRoles.mapNotNull { it.id?.toUUID() }
             )
         }
         return item

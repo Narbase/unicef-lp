@@ -2,7 +2,7 @@ package sd.gov.moe.lp.dto.domain.usersmanagement
 
 import sd.gov.moe.lp.dto.common.IdDto
 import sd.gov.moe.lp.dto.common.enums.Country
-import sd.gov.moe.lp.dto.models.roles.RoleDto
+import sd.gov.moe.lp.dto.domain.roles.RoleDto
 import kotlin.js.JsExport
 
 /*

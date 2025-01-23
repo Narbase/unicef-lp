@@ -8,5 +8,4 @@ data class ExtendedStudentReportCardDto(
     val studentProfile: ExtendedStudentProfileInfoDto,
     val studentSubjects: Array<ExtendedStudentSubjectDto>,
     val studentGroupsCount: Int,
-    val studentLearningPathsCount: Int,
 )

@@ -11,7 +11,7 @@ import sd.gov.moe.lp.dto.domain.usersmanagement.UsersCrudDto
  */
 
 fun UserRm.toCrudDto() = UsersCrudDto.User(
-    client.id.toDto(),
+    client.id?.toDto(),
     user.id.value.toDto(),
     client.username,
     "",
@@ -26,5 +26,5 @@ fun UserRm.toProfileDto() = GetProfileDto.UserProfile(
     user.fullName,
     client.username,
     user.country,
-    roles.map { it.privileges.map { it.dtoName } }.flatten().toTypedArray()
+    roles.map { it.role.privileges.map { it.dtoName } }.flatten().toTypedArray()
 )

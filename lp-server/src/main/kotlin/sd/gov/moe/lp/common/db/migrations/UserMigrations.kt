@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.common.db.migrations
 
+import sd.gov.moe.lp.common.db.migrations.usermigrations.AddCountryToStaffTable
 import sd.gov.moe.lp.common.db.migrations.usermigrations.AddRolesTable
 import sd.gov.moe.lp.common.db.migrations.usermigrations.InitialMigration
 
@@ -11,6 +12,7 @@ fun initializeUserMigrations() {
     Migrations.userMigrations = listOf(
         InitialMigration,
         AddRolesTable,
+        AddCountryToStaffTable,
 
         )
 }

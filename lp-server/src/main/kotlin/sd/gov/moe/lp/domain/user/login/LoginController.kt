@@ -15,9 +15,9 @@ class LoginController : Handler<LoginDto.Request, LoginDto.Response>(LoginDto.Re
         clientData: AuthorizedClientData?
     ): DataResponse<LoginDto.Response> {
         val client = clientData.authenticatedClient
-
+        val clientId = client.id ?: throw IllegalArgumentException("client id cannot be null")
         val clientLastLogin = client.lastLogin
-        transaction { ClientsDao.updateLastLogin(client.id) }
+        transaction { ClientsDao.updateLastLogin(clientId) }
 
         return DataResponse(LoginDto.Response(clientLastLogin == null))
     }

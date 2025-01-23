@@ -9,10 +9,8 @@ import com.narbase.kunafa.core.dimensions.dependent.wrapContent
 import com.narbase.kunafa.core.dimensions.px
 import sd.gov.moe.lp.dto.common.network.ItemList
 import sd.gov.moe.lp.dto.domain.admin.GetGradesEndpoint
-import sd.gov.moe.lp.dto.models.ClientDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentProfileInfoDto
-import sd.gov.moe.lp.dto.models.GradeDto
 import sd.gov.moe.lp.admin.network.remoteProcess
 import sd.gov.moe.lp.admin.translations.localized
 import sd.gov.moe.lp.admin.utils.dialog.validateAndGetText
@@ -25,6 +23,8 @@ import sd.gov.moe.lp.admin.utils.views.popUpDialog
 import sd.gov.moe.lp.admin.utils.views.setupRemoteDropDownList
 import sd.gov.moe.lp.admin.utils.views.theme.adminTheme
 import sd.gov.moe.lp.admin.utils.views.withLoadingAndError
+import sd.gov.moe.lp.dto.domain.clients.ClientDto
+import sd.gov.moe.lp.dto.domain.grades.GradeDto
 
 class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Component() {
     private var popUp = popUpDialog { }
@@ -32,7 +32,6 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
     private var errorTextView: TextView? = null
     private var studentNameTextInput: TextInput? = null
     private var userNameTextInput: TextInput? = null
-    private var passwordTextInput: TextInput? = null
     private var gradeDropDownList: RemoteDropDownList<GradeDto>? = null
     private var studentGrade: GradeDto? = null
     private var imageUploader: ImageUploader? = null
@@ -86,10 +85,9 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
         isDataValid = true
         val name = studentNameTextInput.validateAndGetText()?.trim()
         val userName = userNameTextInput.validateAndGetText()?.trim()
-        val password = passwordTextInput.validateAndGetText()?.trim()
         thumbnailUrl = imageUploader?.imageUrl
         //  fixme: clean the validation
-        if (studentGrade == null || name.isNullOrBlank() || userName.isNullOrBlank() || password.isNullOrBlank()) {
+        if (studentGrade == null || name.isNullOrBlank() || userName.isNullOrBlank()) {
             isDataValid = false
         }
         errorTextView?.isVisible = isDataValid.not()
@@ -104,8 +102,10 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
             ),
             ClientDto(
                 id = extendedStudentProfileInfoDto?.client?.id,
-                userName = userName ?: return,
-                password = password ?: return,
+                username = userName ?: return,
+                passwordHash = extendedStudentProfileInfoDto?.client?.passwordHash ?: return,
+                createdOn = extendedStudentProfileInfoDto?.client?.createdOn,
+                lastLogin = extendedStudentProfileInfoDto?.client?.lastLogin
             )
         )
         if (extendedStudentProfileInfoDto == null) {
@@ -179,7 +179,6 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
                         width = weightOf(1)
                     }
 
-                    passwordTextInput = adminTheme.labeledTextInput(this, "Password".localized(), isRequired = true)
                 }
             }
         }
@@ -197,8 +196,7 @@ class UpsertStudentDialog(val viewModel: StudentsManagementViewModel) : Componen
         thumbnailUrl = dto.student.thumbnailUrl
         upsertDialog(dto)
         studentNameTextInput?.text = dto.student.fullName
-        userNameTextInput?.text = dto.client.userName
-        passwordTextInput?.text = dto.client.password
+        userNameTextInput?.text = dto.client.username
     }
 
 }

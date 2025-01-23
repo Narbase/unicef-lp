@@ -8,6 +8,7 @@ import sd.gov.moe.lp.domain.utils.toDto
 import sd.gov.moe.lp.domain.utils.toDateTime
 import sd.gov.moe.lp.data.conversions.columntypes.toDto
 import sd.gov.moe.lp.data.conversions.columntypes.toModel
+import sd.gov.moe.lp.data.tables.roles.RolesTable.role
 
 fun Role.toDto(): RoleDto {
 	return RoleDto(

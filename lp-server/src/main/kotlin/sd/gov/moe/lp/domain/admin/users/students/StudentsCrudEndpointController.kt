@@ -7,9 +7,9 @@ import sd.gov.moe.lp.data.models.utils.ListAndTotal
 import sd.gov.moe.lp.domain.user.crud.EndpointCrudController
 import sd.gov.moe.lp.dto.common.toStringUUID
 import sd.gov.moe.lp.dto.domain.admin.StudentsCrudEndpoint
-import sd.gov.moe.lp.dto.models.ClientDto
+import sd.gov.moe.lp.dto.domain.clients.ClientDto
+import sd.gov.moe.lp.dto.domain.grades.GradeDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentProfileInfoDto
-import sd.gov.moe.lp.dto.models.GradeDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentDto
 import java.util.*
 
@@ -42,8 +42,10 @@ class StudentsCrudEndpointController : EndpointCrudController<ExtendedStudentPro
                     thumbnailUrl = item.student.thumbnailUrl,
                 ), client = ClientDto(
                     id = UUID.randomUUID().toStringUUID(),
-                    userName = item.client.userName,
-                    password = item.client.password,
+                    username = item.client.username,
+                    passwordHash = item.client.passwordHash,
+                    lastLogin = null,
+                    createdOn = null,
                 )
             )
         studentsList = studentsList.plus(newItem)
@@ -68,7 +70,8 @@ var gradesList = listOf(
     GradeDto(
         id = UUID.randomUUID().toStringUUID(),
         name = "Grade 1",
-        thumbnailUrl = null
+        thumbnailId = null,
+        createdOn = null
     )
 )
 
@@ -83,8 +86,10 @@ var studentsList =
             ),
             ClientDto(
                 id = UUID.randomUUID().toStringUUID(),
-                userName = "first student user name",
-                password = "first student password",
+                username = "first student user name",
+                passwordHash = "first student password",
+                lastLogin = null,
+                createdOn = null
             )
         ),
     )

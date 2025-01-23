@@ -5,10 +5,9 @@ import sd.gov.moe.lp.dto.common.StringUUID
 import sd.gov.moe.lp.dto.common.network.CommonCodes.BASIC_SUCCESS
 import sd.gov.moe.lp.dto.common.network.crud.CrudDto
 import sd.gov.moe.lp.dto.domain.admin.GroupsCrudEndpoint
-import sd.gov.moe.lp.dto.models.GroupDto
 import sd.gov.moe.lp.admin.network.*
 import sd.gov.moe.lp.admin.utils.BasicUiState
-import sd.gov.moe.lp.dto.domain.admin.LearningPathsCrudEndpoint
+import sd.gov.moe.lp.dto.domain.groups.GroupDto
 
 class GroupsManagementViewModel {
     private var searchTerm = ""

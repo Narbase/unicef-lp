@@ -27,9 +27,6 @@ object Routing {
                     "groups" {
                         crud(GroupsCrudEndpoint)
                     }
-                    "learning_paths" {
-                        crud(LearningPathsCrudEndpoint)
-                    }
                     "student" {
                         crud(StudentsCrudEndpoint)
                         "report_card" {

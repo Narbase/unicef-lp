@@ -34,7 +34,7 @@ fun Application.setupAuthenticators(jwtRealm: String, jwtIssuer: String, jwtAudi
                 val uuidClientId = UUID.fromString(clientId)
                 val timestamp = credential.payload.claims["timestamp"]?.asLong() ?: return@validate null
                 val dynamicRoles = transaction { ClientRolesDao.getClientRoles(uuidClientId) }
-                val privileges = dynamicRoles.map { it.privileges }.flatten()
+                val privileges = dynamicRoles.map { it.role.privileges }.flatten()
 
                 AuthorizedClientData(
                     clientId,

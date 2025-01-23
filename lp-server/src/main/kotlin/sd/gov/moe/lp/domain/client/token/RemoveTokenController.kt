@@ -4,7 +4,7 @@ import sd.gov.moe.lp.common.DataResponse
 import sd.gov.moe.lp.common.Handler
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
 import sd.gov.moe.lp.common.exceptions.UnauthenticatedException
-import sd.gov.moe.lp.data.models.clients.Client
+import sd.gov.moe.lp.data.access.clients.Client
 import sd.gov.moe.lp.data.tables.DeviceTokensTable
 import sd.gov.moe.lp.dto.domain.client.token.RemoveTokenDtos.RequestDto
 import sd.gov.moe.lp.dto.domain.client.token.RemoveTokenDtos.ResponseDto

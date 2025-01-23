@@ -53,7 +53,7 @@ class StudentSubjectsTableComponent(private val viewModel: StudentSubjectsTableV
                     tableCell(item.studentSubject.progress.toString(), 1)
                     tableCell(item.studentSubjectAssessments.filter { it.progress >= 100.0 }.size.toString(), 1)
                     tableCell(item.studentSubjectAssessments.map { it.progress }.average().toString(), 1)
-                    tableCell(Date(item.studentSubject.enrolledOn.milliSeconds).toDateString(), 1)
+                    item.studentSubject.createdOn?.let { tableCell(Date(it.milliSeconds).toDateString(), 1) }
                     tableCell(item.studentSubject.completedOn?.let { Date(it.milliSeconds).toDateString() }
                         ?: "Not completed", 1)
                 }

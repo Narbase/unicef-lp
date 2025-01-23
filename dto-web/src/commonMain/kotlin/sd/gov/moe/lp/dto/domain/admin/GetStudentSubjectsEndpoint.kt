@@ -4,7 +4,6 @@ import sd.gov.moe.lp.dto.common.StringUUID
 import sd.gov.moe.lp.dto.common.utils.ListAndTotalDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentReportCardDto
 import sd.gov.moe.lp.dto.models.ExtendedStudentSubjectDto
-import sd.gov.moe.lp.dto.models.GradeDto
 import sd.gov.moe.lp.router.EndPoint
 import kotlin.js.JsExport
 

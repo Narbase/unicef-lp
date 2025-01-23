@@ -3,9 +3,9 @@ package sd.gov.moe.lp.common.auth.basic
 import sd.gov.moe.lp.common.auth.loggedin.AuthorizedClientData
 import sd.gov.moe.lp.data.access.clients.ClientsDao
 import sd.gov.moe.lp.data.access.roles.ClientRolesDao
-import sd.gov.moe.lp.data.models.clients.Client
 import io.ktor.server.auth.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import sd.gov.moe.lp.data.access.clients.Client
 import java.util.*
 
 /*
@@ -44,9 +44,9 @@ class BasicAuthenticator {
     }
 
     private fun generateProfile(client: Client): AuthorizedClientData {
-
-        val dynamicRoles = transaction { ClientRolesDao.getClientRoles(client.id) }
-        val privileges = dynamicRoles.map { it.privileges }.flatten()
+        val clientId = client.id ?: throw IllegalArgumentException("client id cannot be null")
+        val dynamicRoles = transaction { ClientRolesDao.getClientRoles(clientId) }
+        val privileges = dynamicRoles.map { it.role.privileges }.flatten()
 
         return AuthorizedClientData(
             client.id.toString(),

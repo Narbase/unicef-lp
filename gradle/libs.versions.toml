@@ -23,6 +23,9 @@ mockk = "1.12.0"
 coroutines = "1.9.0-RC"
 serialization = "1.7.0-RC"
 
+narrator = "0.1.5"
+ksp = "2.0.0-1.0.24"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -93,6 +96,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-core-js = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-js", version.ref = "coroutines" }
 kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
 
+narrator = { module = "com.narbase.narcore:narrator", version.ref = "narrator" }
 
 
 [plugins]
@@ -100,3 +104,6 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+narrator = { id = "com.narbase.narcore.narrator", version.ref = "narrator" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

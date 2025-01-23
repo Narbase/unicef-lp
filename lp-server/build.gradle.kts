@@ -11,6 +11,8 @@ plugins {
     alias(libs.plugins.ktor)
     application
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.narrator)
 }
 
 val versionNumber = 1
@@ -50,6 +52,9 @@ dependencies {
     implementation(libs.kotlinx.html.jvm)
     implementation(libs.javax.mail)
     implementation(libs.reflections)
+
+    implementation(libs.narrator)
+    ksp(libs.narrator)
 
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.junit.jupiter.api)
@@ -112,4 +117,18 @@ tasks.register("createProperties") {
 }
 tasks.classes {
     dependsOn("createProperties")
+}
+
+ksp {
+    arg("rootProjectPath", project.rootProject.projectDir.path)
+}
+
+narrator {
+    dtoWebPath = projects.dtoWeb.dependencyProject.projectDir.path
+    destinationConfig {
+        packageRelativePath = "sd/gov/moe/lp"
+        daosRelativePath = "data/access"
+        dtosRelativePath = "dto/domain"
+        convertorsRelativePath = "data/conversions"
+    }
 }

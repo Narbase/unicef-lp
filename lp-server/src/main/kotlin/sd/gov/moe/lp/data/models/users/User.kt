@@ -1,6 +1,7 @@
 package sd.gov.moe.lp.data.models.users
 
 import org.joda.time.DateTime
+import sd.gov.moe.lp.dto.common.enums.Country
 import java.util.*
 
 /*
@@ -12,8 +13,7 @@ data class User(
     val createdOn: DateTime,
     val clientId: UUID,
     val fullName: String,
-    val callingCode: String,
-    val localPhone: String,
+    val country: Country,
     val isInactive: Boolean,
     val isDeleted: Boolean,
 )

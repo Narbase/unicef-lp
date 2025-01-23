@@ -6,6 +6,7 @@ import sd.gov.moe.lp.data.tables.ClientsTable
 import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.data.tables.utils.toEntityId
 import org.jetbrains.exposed.sql.*
+import sd.gov.moe.lp.dto.common.enums.Country
 import java.util.*
 
 /*
@@ -13,29 +14,26 @@ import java.util.*
  */
 object UsersDao {
 
-    fun create(clientId: UUID, fullName: String, callingCode: String, localPhone: String): UserId {
+    fun create(clientId: UUID, fullName: String, country: Country): UserId {
         val id = StaffTable.insert {
             it[StaffTable.clientId] = clientId.toEntityId(ClientsTable)
             it[StaffTable.fullName] = fullName
-            it[StaffTable.callingCode] = callingCode
-            it[StaffTable.localPhone] = localPhone
+            it[StaffTable.country] = country
         } get StaffTable.id
         return UserId(id.value)
     }
 
-    fun update(clientId: UUID, fullName: String?, callingCode: String?, localPhone: String?) {
+    fun update(clientId: UUID, fullName: String?, country: Country?) {
         StaffTable.update({ StaffTable.clientId eq clientId }) { row ->
             fullName?.let { row[StaffTable.fullName] = it }
-            callingCode?.let { row[StaffTable.callingCode] = it }
-            localPhone?.let { row[StaffTable.localPhone] = it }
+            country?.let { row[StaffTable.country] = it }
         }
     }
 
-    fun update(id: UserId, fullName: String?, callingCode: String?, localPhone: String?) {
+    fun update(id: UserId, fullName: String?, country: Country?) {
         StaffTable.update({ StaffTable.id eq id.value }) { row ->
             fullName?.let { row[StaffTable.fullName] = it }
-            callingCode?.let { row[StaffTable.callingCode] = it }
-            localPhone?.let { row[StaffTable.localPhone] = it }
+            country?.let { row[StaffTable.country] = it }
         }
     }
 
@@ -56,8 +54,7 @@ object UsersDao {
             row[StaffTable.createdOn],
             row[StaffTable.clientId].value,
             row[StaffTable.fullName],
-            row[StaffTable.callingCode],
-            row[StaffTable.localPhone],
+            row[StaffTable.country],
             row[StaffTable.isInactive],
             row[StaffTable.isDeleted],
         )

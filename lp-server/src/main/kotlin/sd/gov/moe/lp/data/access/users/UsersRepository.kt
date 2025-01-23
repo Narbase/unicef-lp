@@ -12,6 +12,7 @@ import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.dto.domain.usersmanagement.UsersCrudDto
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import sd.gov.moe.lp.dto.common.enums.Country
 import java.util.*
 
 /*
@@ -23,14 +24,13 @@ object UsersRepository {
         username: String,
         password: String,
         fullName: String,
-        callingCode: String,
-        localPhone: String,
+        country: Country,
         rolesIds: List<UUID>
     ): UserId {
         return transaction {
             val clientId = ClientsDao.create(username, password)
             ClientRolesDao.saveClientRoles(clientId, rolesIds)
-            val userId = UsersDao.create(clientId, fullName, callingCode, localPhone)
+            val userId = UsersDao.create(clientId, fullName, country)
             userId
         }
     }
@@ -40,13 +40,12 @@ object UsersRepository {
         username: String?,
         password: String?,
         fullName: String?,
-        callingCode: String?,
-        localPhone: String?,
+        country: Country?,
         rolesIds: List<UUID>?,
     ) {
         return transaction {
             ClientsDao.update(clientId, username, password)
-            UsersDao.update(clientId, fullName, callingCode, localPhone)
+            UsersDao.update(clientId, fullName, country)
             rolesIds?.let { ClientRolesDao.saveClientRoles(clientId, rolesIds) }
         }
     }
@@ -84,9 +83,7 @@ object UsersRepository {
             }
             if (searchTerm?.isNotBlank() == true) {
                 query.andWhere {
-                    (StaffTable.fullName.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%") or
-                            (StaffTable.localPhone.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%") or
-                            (StaffTable.callingCode.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%")
+                    (StaffTable.fullName.lowerCase() like "%${searchTerm.lowercase(Locale.getDefault())}%")
                 }
             }
             val count = query.count()

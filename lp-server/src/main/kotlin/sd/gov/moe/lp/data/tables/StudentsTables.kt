@@ -9,6 +9,7 @@ import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
 import sd.gov.moe.lp.dto.common.enums.Background
+import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.common.enums.Gender
 import sd.gov.moe.lp.dto.common.enums.StudentStatus
 
@@ -20,7 +21,7 @@ object StudentsTable : UUIDTable("students"), LoggedTable, DeletableTableWithReq
     val idNumber = text("id_number").nullable()
     val gender = enum("gender", Gender::class)
     val dateOfBirth = dateWithoutTimezone("date_of_birth")
-    val countryId = reference("country_id", CountriesTable)
+    val country = enum("country", Country::class)
     val schoolName = text("school_name").nullable()
     val callingCode = text("calling_code").nullable() // with leading +
     val localPhone = text("local_phone").nullable() // without leading zero

@@ -39,16 +39,12 @@ class UsersCrudController : CrudController<UsersCrudDto.User, UsersCrudDto.Filte
         if (usernameExist(item.username)) {
             throw CreateItemException(USER_EXIST, USER_EXIST_MSG)
         }
-        if (phoneIsValid(item.callingCode, item.localPhone).not()) {
-            throw CreateItemException(WRONG_PHONE, WRONG_PHONE_MSG)
-        }
 
         val userId = UsersRepository.create(
             item.username,
             item.password,
             item.fullName,
-            item.callingCode,
-            item.localPhone,
+            item.country,
             item.dynamicRoles.mapNotNull { it.id?.toModel() }
         )
 
@@ -58,10 +54,6 @@ class UsersCrudController : CrudController<UsersCrudDto.User, UsersCrudDto.Filte
 
     override fun updateItem(item: UsersCrudDto.User, clientData: AuthorizedClientData?): UsersCrudDto.User {
 
-        if (phoneIsValid(item.callingCode, item.localPhone).not()) throw CreateItemException(
-            WRONG_PHONE,
-            WRONG_PHONE_MSG
-        )
 
         val clientId = item.clientId?.toModel() ?: throw RuntimeException("Client ID cannot be null")
 
@@ -71,8 +63,7 @@ class UsersCrudController : CrudController<UsersCrudDto.User, UsersCrudDto.Filte
                 item.username,
                 item.password.takeUnless { it.isBlank() },
                 item.fullName,
-                "+${item.callingCode.trimStart('+')}",
-                item.localPhone.trimStart('0'),
+                item.country,
                 item.dynamicRoles.mapNotNull { it.id?.toModel() }
             )
         }

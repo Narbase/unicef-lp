@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.dto.domain.user.profile
 
+import sd.gov.moe.lp.dto.common.enums.Country
 import kotlin.js.JsExport
 
 /*
@@ -19,8 +20,7 @@ object GetProfileDto {
         val userId: String,
         val fullName: String,
         val username: String,
-        val callingCode: String,
-        val localPhone: String,
+        val country: Country,
         val privileges: Array<String>
     )
 }

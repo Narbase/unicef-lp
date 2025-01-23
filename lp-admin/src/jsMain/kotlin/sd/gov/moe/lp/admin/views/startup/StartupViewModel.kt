@@ -37,7 +37,6 @@ class StartupViewModel {
             userId,
             fullName,
             username,
-            callingCode,
-            localPhone,
+            country,
             privileges.map { Privilege.valueOf(it) })
 }

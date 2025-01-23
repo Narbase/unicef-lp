@@ -8,6 +8,7 @@ import sd.gov.moe.lp.data.tables.StaffTable
 import sd.gov.moe.lp.dto.domain.user.profile.UpdateUserProfileDto
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
+import sd.gov.moe.lp.dto.common.enum
 import java.util.*
 
 class UpdateProfileController : Handler<UpdateUserProfileDto.RequestDto, Unit>(
@@ -18,8 +19,7 @@ class UpdateProfileController : Handler<UpdateUserProfileDto.RequestDto, Unit>(
         val clientId = UUID.fromString(clientData?.id ?: throw UnauthenticatedException())
         transaction {
             StaffTable.update({ StaffTable.clientId eq clientId }) {
-                it[StaffTable.callingCode] = requestDto.callingCode
-                it[StaffTable.localPhone] = requestDto.localPhone
+                it[StaffTable.country] = requestDto.country.enum()
                 it[StaffTable.fullName] = requestDto.fullName
             }
         }

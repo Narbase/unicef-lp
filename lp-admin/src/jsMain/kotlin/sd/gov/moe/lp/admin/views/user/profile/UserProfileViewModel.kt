@@ -6,6 +6,8 @@ import sd.gov.moe.lp.dto.domain.user.profile.UpdateUserProfileDto
 import sd.gov.moe.lp.admin.network.ServerCaller
 import sd.gov.moe.lp.admin.network.basicNetworkCall
 import sd.gov.moe.lp.admin.utils.BasicUiState
+import sd.gov.moe.lp.dto.common.dto
+import sd.gov.moe.lp.dto.common.enums.Country
 
 /*
  * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
@@ -30,7 +32,7 @@ class UserProfileViewModel {
         localPhone: String
     ) {
         basicNetworkCall(updateProfileUiState) {
-            val dto = UpdateUserProfileDto.RequestDto(fullName, callingCode, localPhone)
+            val dto = UpdateUserProfileDto.RequestDto(fullName, Country.Sudan.dto())
             ServerCaller.updateUserProfile(dto)
         }
     }

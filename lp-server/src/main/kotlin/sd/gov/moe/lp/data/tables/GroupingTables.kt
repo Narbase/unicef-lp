@@ -5,16 +5,13 @@ import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.monitoring.GroupMonitoringStats
+import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.common.enums.Education
 
-object CountriesTable : UUIDTable("countries"), LoggedTable {
-    val name = text("name")
-    override val createdOn = createdOnColumn()
-}
 
 object StatesTable : UUIDTable("states"), LoggedTable {
     val name = text("name")
-    val countryId = reference("country_id", CountriesTable)
+    val country = enum("country", Country::class)
     override val createdOn = createdOnColumn()
 }
 

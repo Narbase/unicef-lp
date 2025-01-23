@@ -15,6 +15,7 @@ import org.joda.time.DateTime
 import sd.gov.moe.lp.data.columntypes.jsonColumn
 import sd.gov.moe.lp.data.models.ReleaseDetails
 import sd.gov.moe.lp.domain.logUpload.ParseResultData
+import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.common.enums.Gender
 import sd.gov.moe.lp.dto.common.enums.StaffActions
 
@@ -52,10 +53,10 @@ object ClientsTable : LoggedTable, UUIDTable("clients") {
 object StaffTable : UUIDTable("staff"), LoggedTable, DeletableTable {
     val clientId = reference("client_id", ClientsTable).uniqueIndex()
     val fullName = text("full_name")
-    val callingCode = text("calling_code") // with leading +
-    val localPhone = text("local_phone") // without leading zero
+//    val callingCode = text("calling_code") // with leading +
+//    val localPhone = text("local_phone") // without leading zero
 
-    //    val countryId = reference("country_id", CountriesTable)
+    val country = enum("country", Country::class)
     val isInactive = bool("is_inactive").default(false)
 
     //    val isDummy = bool("is_dummy").default(false)

@@ -78,8 +78,6 @@ class UserProfileComponent : Component() {
     private fun populateProfile(loadedProfile: GetProfileDto.UserProfile?) {
         loadedProfile ?: return
         fullNameEditableText.text = loadedProfile.fullName
-        phoneEditableView.code = loadedProfile.callingCode
-        phoneEditableView.phoneNumber = loadedProfile.localPhone
     }
 
     override fun View?.getView() = view {

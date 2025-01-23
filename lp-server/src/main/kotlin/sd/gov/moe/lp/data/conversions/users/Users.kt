@@ -16,8 +16,7 @@ fun UserRm.toCrudDto() = UsersCrudDto.User(
     client.username,
     "",
     user.fullName,
-    user.callingCode,
-    user.localPhone,
+    user.country,
     roles.map { it.toDto() }.toTypedArray()
 )
 
@@ -26,7 +25,6 @@ fun UserRm.toProfileDto() = GetProfileDto.UserProfile(
     user.id.value.toString(),
     user.fullName,
     client.username,
-    user.callingCode,
-    user.localPhone,
+    user.country,
     roles.map { it.privileges.map { it.dtoName } }.flatten().toTypedArray()
 )

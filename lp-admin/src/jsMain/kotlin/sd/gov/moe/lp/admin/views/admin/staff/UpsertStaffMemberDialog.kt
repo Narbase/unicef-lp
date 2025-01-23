@@ -26,6 +26,7 @@ import sd.gov.moe.lp.admin.utils.scrollable.ScrollableView
 import sd.gov.moe.lp.admin.utils.scrollable.scrollable
 import sd.gov.moe.lp.admin.utils.views.*
 import sd.gov.moe.lp.admin.utils.views.theme.AdminTheme.textInputStyle
+import sd.gov.moe.lp.dto.common.enums.Country
 
 /*
  * Copyright 2017-2020 Narbase technologies and contributors. Use of this source code is governed by the MIT License.
@@ -40,8 +41,6 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
     private var fullNameTextInput: TextInput? = null
     private var usernameTextInput: TextInput? = null
     private var passwordTextInput: TextInput? = null
-    private var countryCodeTextInput: TextInput? = null
-    private var phoneTextInput: TextInput? = null
 
     override fun View?.getView() = view {
         style {
@@ -81,7 +80,7 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
 
 
                     staffDto?.let {
-                        if (it.fullName != SessionInfo.loggedInUser.fullName || it.localPhone != SessionInfo.loggedInUser.localPhone) {
+                        if (it.fullName != SessionInfo.loggedInUser.fullName || it.country != SessionInfo.loggedInUser.country) {
                             textView {
                                 text =
                                     if (isActive) "Disable user".localized() else "Enable user".localized()
@@ -237,8 +236,6 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
         val username = usernameTextInput.validateAndGetText().trim()
         val password = if (staffDto == null) passwordTextInput.validateAndGetText() else passwordTextInput?.text ?: ""
         val fullName = fullNameTextInput.validateAndGetText()
-        val callingCode = countryCodeTextInput.validateAndGetText()
-        val localPhone = phoneTextInput.validateAndGetText()
 
         errorTextView?.isVisible = isDataValid.not()
         if (isDataValid.not()) return
@@ -249,8 +246,7 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
             username,
             password,
             fullName,
-            callingCode,
-            localPhone,
+            Country.Sudan,
             rolesDropDownListVm?.selectedItems?.toTypedArray() ?: arrayOf()
         )
         if (staffDto == null) {
@@ -351,30 +347,6 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
                 text = "+"
             }
 
-            countryCodeTextInput = textInput {
-                id = "CountryCodeInput"
-                style {
-                    width = 58.px
-                    marginStart = 6.px
-                    type = "tel"
-                    addRuleSet(textInputStyle)
-                }
-                onChange = {
-                    resetStyle()
-                }
-                text = "249"
-            }
-            phoneTextInput = textInput {
-                style {
-                    marginStart = 6.px
-                    type = "tel"
-                    addRuleSet(textInputStyle)
-                }
-                onChange = {
-                    resetStyle()
-                }
-                id = "PhoneInput"
-            }
         }
     }
 
@@ -443,8 +415,6 @@ class UpsertStaffMemberDialog(val viewModel: StaffManagementViewModel, private v
         usernameTextInput?.text = dto.username
         passwordTextInput?.placeholder = "(Enter new password or keep empty)"
         passwordTextInput?.text = ""
-        countryCodeTextInput?.text = dto.callingCode.trim('+')
-        phoneTextInput?.text = dto.localPhone
     }
 
     private val textInputErrorStyle = classRuleSet {

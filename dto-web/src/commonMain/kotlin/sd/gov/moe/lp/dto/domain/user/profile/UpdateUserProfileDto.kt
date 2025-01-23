@@ -1,5 +1,7 @@
 package sd.gov.moe.lp.dto.domain.user.profile
 
+import sd.gov.moe.lp.dto.common.DtoName
+import sd.gov.moe.lp.dto.common.enums.Country
 import kotlin.js.JsExport
 
 /*
@@ -9,8 +11,7 @@ import kotlin.js.JsExport
 object UpdateUserProfileDto {
     class RequestDto(
         val fullName: String,
-        val callingCode: String,
-        val localPhone: String
+        val country: DtoName<Country>,
     )
 
     class ResponseDto

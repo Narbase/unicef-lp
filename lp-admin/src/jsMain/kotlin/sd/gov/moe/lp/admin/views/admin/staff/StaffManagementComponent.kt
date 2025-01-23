@@ -56,7 +56,7 @@ class StaffManagementComponent(private val showCurrent: Boolean) : Component() {
                     tableCell(item.fullName, 3, 16.px)
                     tableCell(1) {
                         textView {
-                            text = "${item.callingCode} ${item.localPhone}"
+                            text = "${item.country.name}"
                             style {
                                 width = wrapContent
                                 fontSize = 14.px

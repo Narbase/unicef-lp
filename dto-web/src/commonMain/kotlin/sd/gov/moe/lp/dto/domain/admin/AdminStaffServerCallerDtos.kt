@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.dto.domain.admin
 
+import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.models.roles.DynamicRoleDto
 import kotlin.js.JsExport
 
@@ -19,8 +20,7 @@ object AdminStaffServerCallerDtos {
         val username: String,
         val password: String,
         val fullName: String,
-        val callingCode: String,
-        val localPhone: String,
+        val country: Country,
         val dynamicRoles: Array<DynamicRoleDto>
     )
 }

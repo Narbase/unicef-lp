@@ -1,5 +1,6 @@
 package sd.gov.moe.lp.admin.storage
 
+import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.models.roles.Privilege
 
 /*
@@ -16,7 +17,6 @@ class CurrentUserProfile(
     val userId: String,
     val fullName: String,
     val userName: String,
-    val callingCode: String,
-    val localPhone: String,
+    val country: Country,
     val privileges: List<Privilege>
 )

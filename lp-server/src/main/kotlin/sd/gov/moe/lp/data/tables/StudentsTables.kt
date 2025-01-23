@@ -7,7 +7,6 @@ import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
-import sd.gov.moe.lp.data.models.monitoring.StudentMonitoringStats
 import sd.gov.moe.lp.dto.common.enums.Background
 import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.common.enums.Gender

@@ -3,8 +3,6 @@ package sd.gov.moe.lp.data.tables
 import org.jetbrains.exposed.dao.id.UUIDTable
 import sd.gov.moe.lp.data.columntypes.dateWithoutTimezone
 import sd.gov.moe.lp.data.columntypes.enum
-import sd.gov.moe.lp.data.columntypes.jsonColumn
-import sd.gov.moe.lp.data.models.monitoring.GroupMonitoringStats
 import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.common.enums.Education
 

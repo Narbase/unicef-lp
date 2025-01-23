@@ -1,10 +1,7 @@
 package sd.gov.moe.lp.data.tables
 
 
-import com.google.gson.JsonElement
 import com.narbase.oss.dto.common.forms.EntryListDto
-import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
-import sd.gov.moe.lp.data.columntypes.enum
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Function
@@ -12,12 +9,11 @@ import org.jetbrains.exposed.sql.QueryBuilder
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.jodatime.DateColumnType
 import org.joda.time.DateTime
+import sd.gov.moe.lp.data.columntypes.dateTimeWithoutTimezone
+import sd.gov.moe.lp.data.columntypes.enum
 import sd.gov.moe.lp.data.columntypes.jsonColumn
-import sd.gov.moe.lp.data.models.ReleaseDetails
-import sd.gov.moe.lp.domain.logUpload.ParseResultData
 import sd.gov.moe.lp.dto.common.enums.Country
 import sd.gov.moe.lp.dto.common.enums.Gender
-import sd.gov.moe.lp.dto.common.enums.StaffActions
 
 interface DeletableTable {
     val isDeleted: Column<Boolean>
